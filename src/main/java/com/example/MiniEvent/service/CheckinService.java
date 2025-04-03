@@ -1,41 +1,66 @@
 package com.example.MiniEvent.service;
 
+import com.example.MiniEvent.model.Checkin;
 import com.example.MiniEvent.model.CheckinRequest;
 import com.example.MiniEvent.model.Event;
+import com.example.MiniEvent.response.ResponseObject;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.GeoPoint;
 import com.google.firebase.cloud.FirestoreClient;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CheckinService {
 
-    private static final double DISTANCE_THRESHOLD = 0.1; // 100m tính bằng km
+    @Value("${app.distance.threshold}")
+    private Double DISTANCE_THRESHOLD; // 100m tính bằng km
 
-    public String checkin(CheckinRequest request) throws Exception {
+    public ResponseObject checkin(CheckinRequest request) throws Exception {
         Firestore db = FirestoreClient.getFirestore();
 
-        // Lấy thông tin sự kiện từ Firestore
         DocumentSnapshot eventDoc = db.collection("events").document(request.getEventId()).get().get();
         if (!eventDoc.exists()) {
-            return "Sự kiện không tồn tại";
+            return ResponseObject.builder()
+                    .message("Event not exist")
+                    .status(400)
+                    .data(null)
+                    .build();
         }
 
         Event event = eventDoc.toObject(Event.class);
-
-        // Tính khoảng cách bằng Haversine
+        assert event != null;
+        GeoPoint eventLocation = event.getLocation();
         double distance = calculateDistance(
-                event.getLatitude(), event.getLongitude(),
+                eventLocation.getLatitude(), eventLocation.getLongitude(),
                 request.getUserLatitude(), request.getUserLongitude()
         );
 
-        // Kiểm tra ngưỡng
         if (distance <= DISTANCE_THRESHOLD) {
-            // Lưu thông tin điểm danh (tạm thời chỉ lưu request, có thể thêm logic sau)
-            db.collection("checkins").document().set(request);
-            return "Điểm danh thành công";
+            String checkinId = request.getUserId() + "_" + request.getEventId();
+            db.collection("checkins").document(checkinId).set(
+                    Checkin.builder()
+                            .eventId(request.getEventId())
+                            .userId(request.getUserId())
+                            .location(new GeoPoint(request.getUserLatitude(), request.getUserLongitude()))
+                            .date(Timestamp.now())
+                            .build()
+                    );
+            return ResponseObject.builder()
+                    .message("Checkin successfully")
+                    .status(200)
+                    .data(event)
+                    .build();
         } else {
-            return "Bạn không ở gần sự kiện (khoảng cách: " + String.format("%.2f", distance) + " km)";
+            return ResponseObject.builder()
+                    .message("Checkin fail (distances: " + String.format("%.2f", distance) + " km)")
+                    .status(403)
+                    .data(null)
+                    .build();
         }
     }
 

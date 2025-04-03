@@ -11,11 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Event {
-    private String id;
-    private String name;
+public class Checkin {
+    private String userId;
+    private String eventId;
     private GeoPoint location;
-    private String description;
     private Timestamp date;
-    private String image;
 }
