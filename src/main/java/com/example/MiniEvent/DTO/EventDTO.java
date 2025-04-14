@@ -35,8 +35,4 @@ public class EventDTO {
     @JsonDeserialize(using = TimestampDeserializer.class)
     @JsonSerialize(using = TimestampSerializer.class)
     private Timestamp date;
-
-    @NotEmpty
-    private String image;
-
 }
