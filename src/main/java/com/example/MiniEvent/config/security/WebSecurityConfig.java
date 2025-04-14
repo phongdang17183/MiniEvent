@@ -26,6 +26,7 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/" + apiPrefix + "/users/event").permitAll()
+                .requestMatchers("/" + apiPrefix + "/users/register").permitAll()
                 .anyRequest().authenticated()
         );
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

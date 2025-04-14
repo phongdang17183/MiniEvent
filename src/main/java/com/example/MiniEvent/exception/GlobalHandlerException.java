@@ -1,6 +1,8 @@
 package com.example.MiniEvent.exception;
 
 import com.example.MiniEvent.response.ResponseObject;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.FirebaseAuthException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,4 +85,27 @@ public class GlobalHandlerException {
                         .build()
         );
     }
+
+    @ExceptionHandler(FirebaseException.class)
+    public ResponseEntity<ResponseObject> handleFirebaseException(FirebaseException ex) {
+        return ResponseEntity.badRequest().body(
+                ResponseObject.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message("Failed to process Firebase method: " + ex.getMessage())
+                        .data(null)
+                        .build()
+        );
+    }
+
+    @ExceptionHandler(FirebaseAuthException.class)
+    public ResponseEntity<ResponseObject> handleFirebaseAuthException(FirebaseAuthException ex) {
+        return ResponseEntity.badRequest().body(
+                ResponseObject.builder()
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message("Failed when authorize by Firebase: " + ex.getMessage())
+                        .data(null)
+                        .build()
+        );
+    }
+
 }
