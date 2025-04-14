@@ -17,7 +17,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-@JsonSerialize(using= GeoPointSerializer.class)
 public class EventDTO {
 
     @NotEmpty
@@ -35,4 +34,11 @@ public class EventDTO {
     @JsonDeserialize(using = TimestampDeserializer.class)
     @JsonSerialize(using = TimestampSerializer.class)
     private Timestamp date;
+
+    @NotNull
+    private Boolean privateEvent;
+
+    @NotNull
+    private Boolean gps;
+
 }

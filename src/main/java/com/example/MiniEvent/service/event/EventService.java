@@ -40,6 +40,8 @@ public class EventService {
                 .location(eventDTO.getLocation())
                 .description(eventDTO.getDescription())
                 .date(eventDTO.getDate())
+                .privateEvent(eventDTO.getPrivateEvent())
+                .gps(eventDTO.getGps())
                 .image(imageUrl)
                 .createdBy(uid)
                 .build();
