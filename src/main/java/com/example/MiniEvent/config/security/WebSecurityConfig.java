@@ -1,5 +1,6 @@
 package com.example.MiniEvent.config.security;
 
+import com.example.MiniEvent.config.AppProperties;
 import com.example.MiniEvent.config.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,17 +17,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class WebSecurityConfig {
 
-    @Value("${app.version}")
-    private String apiPrefix;
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final AppProperties appProperties;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        String prefix = appProperties.getApiPrefix();
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/" + apiPrefix + "/users/event").permitAll()
-                .requestMatchers("/" + apiPrefix + "/users/register").permitAll()
+                .requestMatchers(prefix + "/users/event").permitAll()
+                .requestMatchers(prefix + "/users/register").permitAll()
                 .anyRequest().authenticated()
         );
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

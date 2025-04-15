@@ -9,7 +9,6 @@ import com.example.MiniEvent.service.event.EventService;
 import com.example.MiniEvent.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("${app.version}/users")
-@Slf4j
+@RequestMapping("/users")
 public class UserController {
 
     private final EventService eventService;
