@@ -9,7 +9,6 @@ import com.google.firebase.auth.UserRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -17,14 +16,16 @@ import java.util.concurrent.ExecutionException;
 public class UserService {
 
     private final Firestore firestore;
+    private final FirebaseAuth firebaseAuth;
 
     public AppUser register(RegisterDTO request) throws FirebaseAuthException, ExecutionException, InterruptedException {
         UserRecord.CreateRequest createRequest = new UserRecord.CreateRequest()
                 .setEmail(request.getEmail())
                 .setPassword(request.getPassword());
 
+        String uid = firebaseAuth.createUser(createRequest).getUid();
         AppUser user = AppUser.builder()
-                .id(FirebaseAuth.getInstance().createUser(createRequest).getUid())
+                .id(uid)
                 .email(request.getEmail())
                 .password(request.getPassword())
                 .username(request.getUsername())

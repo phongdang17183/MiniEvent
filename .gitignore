@@ -37,3 +37,8 @@ build/
 
 ### Enviroment
 .env
+
+### Test ###
+database-debug.log
+firebase-debug.log
+firestore-debug.log
