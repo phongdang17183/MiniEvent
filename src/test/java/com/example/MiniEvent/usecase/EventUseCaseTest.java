@@ -2,8 +2,8 @@ package com.example.MiniEvent.usecase;
 
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.repository.EventRepository;
-import com.example.MiniEvent.service.impl.EventUseCaseImpl;
-import com.example.MiniEvent.service.usecase.ImageStorageService;
+import com.example.MiniEvent.usecase.impl.CreateEventUseCaseImpl;
+import com.example.MiniEvent.service.inteface.ImageStorageService;
 import com.example.MiniEvent.web.DTO.EventDTO;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.GeoPoint;
@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class EventUseCaseImplTest {
+public class EventUseCaseTest {
     @Mock
     private EventRepository eventRepository;
 
@@ -34,7 +34,7 @@ public class EventUseCaseImplTest {
     private MultipartFile image;
 
     @InjectMocks
-    private EventUseCaseImpl eventUseCaseImpl;
+    private CreateEventUseCaseImpl eventUseCaseImpl;
 
     private EventDTO eventDTO;
 

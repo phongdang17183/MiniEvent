@@ -1,9 +1,9 @@
-package com.example.MiniEvent.service.impl;
+package com.example.MiniEvent.usecase.impl;
 
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.repository.EventRepository;
-import com.example.MiniEvent.service.usecase.EventUseCase;
-import com.example.MiniEvent.service.usecase.ImageStorageService;
+import com.example.MiniEvent.usecase.inteface.CreateEventUseCase;
+import com.example.MiniEvent.service.inteface.ImageStorageService;
 import com.example.MiniEvent.web.DTO.EventDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class EventUseCaseImpl implements EventUseCase {
+public class CreateEventUseCaseImpl implements CreateEventUseCase {
 
     private final EventRepository eventRepository;
     private final ImageStorageService imageStorageService;

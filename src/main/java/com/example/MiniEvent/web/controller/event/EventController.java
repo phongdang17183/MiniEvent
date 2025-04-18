@@ -1,7 +1,7 @@
 package com.example.MiniEvent.web.controller.event;
 
 import com.example.MiniEvent.model.entity.Event;
-import com.example.MiniEvent.service.usecase.EventUseCase;
+import com.example.MiniEvent.usecase.inteface.CreateEventUseCase;
 import com.example.MiniEvent.web.DTO.EventDTO;
 import com.example.MiniEvent.web.response.ResponseObject;
 import jakarta.validation.Valid;
@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/events")
 public class EventController {
 
-    private final EventUseCase eventUseCase;
+    private final CreateEventUseCase eventUseCase;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createEvent(

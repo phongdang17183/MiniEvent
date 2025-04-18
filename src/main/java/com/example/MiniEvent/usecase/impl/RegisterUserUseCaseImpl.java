@@ -1,15 +1,15 @@
-package com.example.MiniEvent.service.impl;
+package com.example.MiniEvent.usecase.impl;
 
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.repository.UserRepository;
-import com.example.MiniEvent.service.usecase.UserUseCase;
+import com.example.MiniEvent.usecase.inteface.RegisterUserUseCase;
 import com.example.MiniEvent.web.DTO.request.RegisterDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserUseCaseImpl implements UserUseCase {
+public class RegisterUserUseCaseImpl implements RegisterUserUseCase {
 
     private final UserRepository userRepository;
 
@@ -22,19 +22,10 @@ public class UserUseCaseImpl implements UserUseCase {
         if (request.getUsername() == null || request.getUsername().isEmpty()) {
             throw new IllegalArgumentException("Username cannot be empty");
         }
-        if (request.getPassword() == null || request.getPassword().isEmpty()) {
-            throw new IllegalArgumentException("Username cannot be empty");
-        }
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
 
-        AppUser user = AppUser.builder()
-                .email(request.getEmail())
-                .password(request.getPassword())
-                .username(request.getUsername())
-                .build();
-
-        return userRepository.save(user);
+        return userRepository.save(request);
     }
 }

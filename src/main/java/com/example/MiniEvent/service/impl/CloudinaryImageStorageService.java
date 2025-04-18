@@ -1,7 +1,7 @@
 package com.example.MiniEvent.service.impl;
 
 import com.cloudinary.Cloudinary;
-import com.example.MiniEvent.service.usecase.ImageStorageService;
+import com.example.MiniEvent.service.inteface.ImageStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

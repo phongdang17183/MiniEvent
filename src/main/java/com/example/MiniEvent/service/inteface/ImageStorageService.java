@@ -1,4 +1,4 @@
-package com.example.MiniEvent.service.usecase;
+package com.example.MiniEvent.service.inteface;
 
 import org.springframework.web.multipart.MultipartFile;
 
