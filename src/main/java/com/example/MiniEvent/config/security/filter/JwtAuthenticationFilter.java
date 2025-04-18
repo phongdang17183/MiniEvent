@@ -8,12 +8,15 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Collections;
 
 @Slf4j
 @Component
@@ -31,10 +34,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String uid = decodedToken.getUid();
 
                 UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(uid, null, null);
+                        new UsernamePasswordAuthenticationToken(uid, decodedToken.getUid(), Collections.emptyList());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("✅ Authenticated user with uid: {}", uid);
             } catch (FirebaseAuthException e) {
-                log.error("Firebase token verification failed", e);
+                log.error("❌ Firebase token verification failed", e);
             }
         }
 
