@@ -1,4 +1,4 @@
-package com.example.MiniEvent.web.DTO.request;
+package com.example.MiniEvent.web.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class RegisterDTO {
+public class RegisterRequest {
 
     @NotEmpty
     private String username;

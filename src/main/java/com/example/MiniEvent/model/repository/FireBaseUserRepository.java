@@ -1,7 +1,7 @@
 package com.example.MiniEvent.model.repository;
 
 import com.example.MiniEvent.model.entity.AppUser;
-import com.example.MiniEvent.web.DTO.request.RegisterDTO;
+import com.example.MiniEvent.web.dto.request.RegisterRequest;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
@@ -21,7 +21,7 @@ public class FireBaseUserRepository implements UserRepository{
     private final FirebaseAuth firebaseAuth;
 
     @Override
-    public AppUser save(RegisterDTO request) {
+    public AppUser save(RegisterRequest request) {
         try {
             UserRecord.CreateRequest createRequest = new UserRecord.CreateRequest()
                     .setEmail(request.getEmail())

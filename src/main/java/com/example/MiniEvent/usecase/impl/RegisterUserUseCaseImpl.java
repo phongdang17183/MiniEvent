@@ -3,7 +3,7 @@ package com.example.MiniEvent.usecase.impl;
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.repository.UserRepository;
 import com.example.MiniEvent.usecase.inteface.RegisterUserUseCase;
-import com.example.MiniEvent.web.DTO.request.RegisterDTO;
+import com.example.MiniEvent.web.dto.request.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ public class RegisterUserUseCaseImpl implements RegisterUserUseCase {
     private final UserRepository userRepository;
 
     @Override
-    public AppUser register(RegisterDTO request) {
+    public AppUser register(RegisterRequest request) {
 
         if (request.getEmail() == null || request.getEmail().isEmpty()) {
             throw new IllegalArgumentException("Email cannot be empty");

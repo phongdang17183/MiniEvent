@@ -4,7 +4,7 @@ import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.repository.EventRepository;
 import com.example.MiniEvent.usecase.impl.CreateEventUseCaseImpl;
 import com.example.MiniEvent.service.inteface.ImageStorageService;
-import com.example.MiniEvent.web.DTO.EventDTO;
+import com.example.MiniEvent.web.dto.request.CreateEventRequest;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.GeoPoint;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +34,7 @@ public class EventUseCaseTest {
     @InjectMocks
     private CreateEventUseCaseImpl eventUseCaseImpl;
 
-    private EventDTO eventDTO;
+    private CreateEventRequest createEventRequest;
     private MultipartFile imageFile;
     private Event event;
 
@@ -42,7 +42,7 @@ public class EventUseCaseTest {
     void setUp() {
         GeoPoint location = new GeoPoint(10.7769,106.7009);
         Timestamp date = Timestamp.ofTimeMicroseconds(1634567890000000L);
-        eventDTO = new EventDTO("test event", location, "A test event", date, false, false, 50);
+        createEventRequest = new CreateEventRequest("test event", location, "A test event", date, false, false, 50);
 
         event = Event.builder()
                 .id("event123")
@@ -75,7 +75,7 @@ public class EventUseCaseTest {
 
         when(eventRepository.save(any(Event.class))).thenReturn(event);
 
-        Event result = eventUseCaseImpl.createEvent(eventDTO, null);
+        Event result = eventUseCaseImpl.createEvent(createEventRequest, null);
 
         assertNotNull(result);
         assertEquals("Test Event", result.getName());
@@ -100,7 +100,7 @@ public class EventUseCaseTest {
         when(imageStorageService.uploadImage(any())).thenReturn(uploadedImageUrl);
         when(eventRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
-        Event result = eventUseCaseImpl.createEvent(eventDTO, imageFile);
+        Event result = eventUseCaseImpl.createEvent(createEventRequest, imageFile);
 
         assertNotNull(result);
         assertEquals(uploadedImageUrl, result.getImage());

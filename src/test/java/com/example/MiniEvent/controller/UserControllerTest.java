@@ -1,6 +1,6 @@
 package com.example.MiniEvent.controller;
 
-import com.example.MiniEvent.web.DTO.request.RegisterDTO;
+import com.example.MiniEvent.web.dto.request.RegisterRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.auth.AuthErrorCode;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,7 +58,7 @@ public class UserControllerTest {
 
     @Test
     void testRegister_Ok() throws Exception {
-        RegisterDTO request = new RegisterDTO("test","test@gmail.com", "123456", "0123456789");
+        RegisterRequest request = new RegisterRequest("test","test@gmail.com", "123456", "0123456789");
 
         mockMvc.perform(post("/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)

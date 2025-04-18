@@ -1,7 +1,7 @@
 package com.example.MiniEvent.web.controller.user;
 
 import com.example.MiniEvent.usecase.inteface.RegisterUserUseCase;
-import com.example.MiniEvent.web.DTO.request.RegisterDTO;
+import com.example.MiniEvent.web.dto.request.RegisterRequest;
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.web.response.ResponseObject;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class UserController {
     private final RegisterUserUseCase registerUserUseCase;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDTO request) throws Exception{
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) throws Exception{
         AppUser user = registerUserUseCase.register(request);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseObject.builder()

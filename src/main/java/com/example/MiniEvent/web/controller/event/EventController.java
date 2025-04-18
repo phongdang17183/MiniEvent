@@ -2,7 +2,7 @@ package com.example.MiniEvent.web.controller.event;
 
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.usecase.inteface.CreateEventUseCase;
-import com.example.MiniEvent.web.DTO.EventDTO;
+import com.example.MiniEvent.web.dto.request.CreateEventRequest;
 import com.example.MiniEvent.web.response.ResponseObject;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +24,9 @@ public class EventController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createEvent(
-            @Valid @RequestPart("event") EventDTO eventDTO,
+            @Valid @RequestPart("event") CreateEventRequest createEventRequest,
             @RequestPart("image") MultipartFile image ) throws Exception {
-        Event event = eventUseCase.createEvent(eventDTO, image);
+        Event event = eventUseCase.createEvent(createEventRequest, image);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseObject.builder()
                         .status(HttpStatus.OK.value())

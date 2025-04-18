@@ -4,7 +4,7 @@ import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.repository.EventRepository;
 import com.example.MiniEvent.usecase.inteface.CreateEventUseCase;
 import com.example.MiniEvent.service.inteface.ImageStorageService;
-import com.example.MiniEvent.web.DTO.EventDTO;
+import com.example.MiniEvent.web.dto.request.CreateEventRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class CreateEventUseCaseImpl implements CreateEventUseCase {
     private final ImageStorageService imageStorageService;
 
     @Override
-    public Event createEvent(EventDTO eventDTO, MultipartFile image) throws Exception {
+    public Event createEvent(CreateEventRequest eventDTO, MultipartFile image) throws Exception {
 
         if (eventDTO.getName() == null || eventDTO.getName().isEmpty()) {
             throw new IllegalArgumentException("Event name is required");

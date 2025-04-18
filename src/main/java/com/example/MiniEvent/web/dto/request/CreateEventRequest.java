@@ -1,4 +1,4 @@
-package com.example.MiniEvent.web.DTO;
+package com.example.MiniEvent.web.dto.request;
 
 import com.example.MiniEvent.config.geopoint.GeoPointDeserializer;
 import com.example.MiniEvent.config.geopoint.GeoPointSerializer;
@@ -18,7 +18,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class EventDTO {
+public class CreateEventRequest {
 
     @NotEmpty
     private String name;

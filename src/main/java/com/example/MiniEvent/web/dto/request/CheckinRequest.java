@@ -1,4 +1,4 @@
-package com.example.MiniEvent.web.DTO.request;
+package com.example.MiniEvent.web.dto.request;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
