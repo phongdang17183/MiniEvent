@@ -20,5 +20,6 @@ public class Event {
     private String image;
     private String createdBy;
     private Boolean privateEvent;
+    private Integer limit;
     private Boolean gps;
 }

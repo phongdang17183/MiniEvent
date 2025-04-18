@@ -43,6 +43,7 @@ public class CreateEventUseCaseImpl implements CreateEventUseCase {
                 .description(eventDTO.getDescription())
                 .date(eventDTO.getDate())
                 .privateEvent(eventDTO.getPrivateEvent())
+                .limit(eventDTO.getLimit())
                 .gps(eventDTO.getGps())
                 .image(imageUrl)
                 .createdBy(uid)

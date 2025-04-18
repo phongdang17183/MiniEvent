@@ -10,6 +10,7 @@ import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.GeoPoint;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,5 +41,9 @@ public class EventDTO {
 
     @NotNull
     private Boolean gps;
+
+    @NotNull
+    @Positive
+    private Integer limit;
 
 }
