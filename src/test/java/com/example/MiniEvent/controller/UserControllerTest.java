@@ -1,11 +1,11 @@
 package com.example.MiniEvent.controller;
 
-import com.example.MiniEvent.DTO.request.RegisterDTO;
+import com.example.MiniEvent.web.DTO.request.RegisterDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.firebase.auth.AuthErrorCode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +19,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest // 👈 Load full context (tức là dùng luôn service thật)
+// REMEMBER SET ENVIRONMENT AND CHECK BEFORE RUNNING TEST
+
+@SpringBootTest // Load full context (tức là dùng luôn service thật)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
         "app.version=v1",
         "app.distance.threshold=0.1",
         "firebase.auth.emulator.host=127.0.0.1:9099", // Host của Firebase Auth Emulator
-        "firebase.firestore.emulator.host=127.0.0.1:8081" // Host của Firestore Emulator// 👈 Nếu bạn cần placeholder như vậy trong các bean
+        "firebase.firestore.emulator.host=127.0.0.1:8081" // Host của Firestore Emulator
 })
 @ActiveProfiles("test")
 public class UserControllerTest {
@@ -36,7 +38,6 @@ public class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-
     @Autowired
     private FirebaseAuth firebaseAuth;
 
@@ -45,15 +46,18 @@ public class UserControllerTest {
         try {
             UserRecord user = firebaseAuth.getUserByEmail("test@gmail.com");
             firebaseAuth.deleteUser(user.getUid());
-            System.out.println("Deleted existing test user.");
+            System.out.println("✅ Deleted existing test user.");
         } catch (FirebaseAuthException e) {
-            // User doesn't exist -> ignore
-            System.out.println("Test user not found, skip delete.");
+            if (e.getAuthErrorCode() == AuthErrorCode.USER_NOT_FOUND) {
+                System.out.println("ℹ️ Test user not found, skip delete.");
+            } else {
+                throw new RuntimeException("❌ Failed to clean up test user: " + e.getMessage(), e);
+            }
         }
     }
 
     @Test
-    void testRegister_thenDelete() throws Exception {
+    void testRegister_Ok() throws Exception {
         RegisterDTO request = new RegisterDTO("test","test@gmail.com", "123456");
 
         mockMvc.perform(post("/v1/users/register") // 👈 nhớ đúng prefix

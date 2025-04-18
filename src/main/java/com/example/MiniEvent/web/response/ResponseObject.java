@@ -1,4 +1,4 @@
-package com.example.MiniEvent.response;
+package com.example.MiniEvent.web.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

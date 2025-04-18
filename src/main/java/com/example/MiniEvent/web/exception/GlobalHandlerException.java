@@ -1,6 +1,6 @@
-package com.example.MiniEvent.exception;
+package com.example.MiniEvent.web.exception;
 
-import com.example.MiniEvent.response.ResponseObject;
+import com.example.MiniEvent.web.response.ResponseObject;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuthException;
 import jakarta.validation.ConstraintViolationException;

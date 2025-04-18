@@ -1,4 +1,4 @@
-package com.example.MiniEvent.DTO.request;
+package com.example.MiniEvent.web.DTO.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;

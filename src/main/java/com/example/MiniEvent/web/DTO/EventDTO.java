@@ -1,4 +1,4 @@
-package com.example.MiniEvent.DTO;
+package com.example.MiniEvent.web.DTO;
 
 import com.example.MiniEvent.config.geopoint.GeoPointDeserializer;
 import com.example.MiniEvent.config.geopoint.GeoPointSerializer;

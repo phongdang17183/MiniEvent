@@ -1,9 +1,10 @@
-package com.example.MiniEvent.service.event;
+package com.example.MiniEvent.service.impl;
 
-import com.example.MiniEvent.DTO.EventDTO;
-import com.example.MiniEvent.model.Event;
-import com.example.MiniEvent.service.cloudinary.CloudinaryService;
-import com.google.cloud.firestore.Firestore;
+import com.example.MiniEvent.model.entity.Event;
+import com.example.MiniEvent.model.repository.EventRepository;
+import com.example.MiniEvent.service.usecase.EventUseCase;
+import com.example.MiniEvent.service.usecase.ImageStorageService;
+import com.example.MiniEvent.web.DTO.EventDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,13 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class EventService {
+public class EventUseCaseImpl implements EventUseCase {
 
-    private final Firestore firestore;
-    private final CloudinaryService cloudinaryService;
+    private final EventRepository eventRepository;
+    private final ImageStorageService imageStorageService;
 
+    @Override
     public Event createEvent(EventDTO eventDTO, MultipartFile image) throws Exception {
-        String uid = SecurityContextHolder.getContext().getAuthentication().getName();
 
         if (eventDTO.getName() == null || eventDTO.getName().isEmpty()) {
             throw new IllegalArgumentException("Event name is required");
@@ -28,14 +29,15 @@ public class EventService {
             throw new IllegalArgumentException("Event date is required");
         }
 
+        String uid = SecurityContextHolder.getContext().getAuthentication().getName();
+
         String imageUrl = null;
         if (image != null && !image.isEmpty()) {
-            imageUrl = cloudinaryService.uploadImage(image).get("secure_url").toString();
+            imageUrl = imageStorageService.uploadImage(image);
         }
 
-        String eventId = UUID.randomUUID().toString();
         Event event = Event.builder()
-                .id(eventId)
+                .id(UUID.randomUUID().toString())
                 .name(eventDTO.getName())
                 .location(eventDTO.getLocation())
                 .description(eventDTO.getDescription())
@@ -46,8 +48,6 @@ public class EventService {
                 .createdBy(uid)
                 .build();
 
-        firestore.collection("events").document(eventId).set(event).get();
-        return event;
+        return eventRepository.save(event);
     }
-
 }

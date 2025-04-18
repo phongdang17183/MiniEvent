@@ -1,4 +1,4 @@
-package com.example.MiniEvent.model;
+package com.example.MiniEvent.model.entity;
 
 
 import lombok.AllArgsConstructor;

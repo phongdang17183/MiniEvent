@@ -24,11 +24,6 @@ public class TestFirebaseConfig {
 
     @Bean
     public FirebaseApp firebaseApp() {
-        System.setProperty("FIREBASE_AUTH_EMULATOR_HOST", authEmulatorHost);
-        System.setProperty("FIRESTORE_EMULATOR_HOST", firestoreEmulatorHost);
-
-        System.out.println("Firebase Auth Emulator Host: " + System.getProperty("FIREBASE_AUTH_EMULATOR_HOST"));
-        System.out.println("Firestore Emulator Host: " + System.getProperty("FIRESTORE_EMULATOR_HOST"));
 
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(new FirebaseCredentialsEmulator())
