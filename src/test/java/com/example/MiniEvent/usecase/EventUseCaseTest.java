@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,33 +31,20 @@ public class EventUseCaseTest {
     @Mock
     private ImageStorageService imageStorageService;
 
-    @Mock
-    private MultipartFile image;
-
     @InjectMocks
     private CreateEventUseCaseImpl eventUseCaseImpl;
 
     private EventDTO eventDTO;
+    private MultipartFile imageFile;
+    private Event event;
 
     @BeforeEach
     void setUp() {
-        // Khởi tạo EventDTO với dữ liệu mặc định
         GeoPoint location = new GeoPoint(10.7769,106.7009);
         Timestamp date = Timestamp.ofTimeMicroseconds(1634567890000000L);
         eventDTO = new EventDTO("test event", location, "A test event", date, false, false);
 
-        // Mock SecurityContextHolder để trả về uid
-        Authentication authentication = mock(Authentication.class);
-        when(authentication.getName()).thenReturn("uid123");
-        SecurityContext securityContext = mock(SecurityContext.class);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
-    }
-
-    @Test
-    void createEvent_success_withoutImage() throws Exception {
-        // Chuẩn bị dữ liệu
-        Event event = Event.builder()
+        event = Event.builder()
                 .id("event123")
                 .name("Test Event")
                 .date(Timestamp.ofTimeMicroseconds(1634567890000000L))
@@ -67,13 +55,27 @@ public class EventUseCaseTest {
                 .createdBy("uid123")
                 .build();
 
-        // Mock EventRepository
+        imageFile = new MockMultipartFile(
+                "image",
+                "test-image.jpg",
+                "image/jpeg",
+                "fake-image-content".getBytes()
+        );
+
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("uid123");
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+    }
+
+    @Test
+    void createEvent_success_withoutImage() throws Exception {
+
         when(eventRepository.save(any(Event.class))).thenReturn(event);
 
-        // Gọi phương thức
         Event result = eventUseCaseImpl.createEvent(eventDTO, null);
 
-        // Kiểm tra kết quả
         assertNotNull(result);
         assertEquals("Test Event", result.getName());
         assertEquals(Timestamp.ofTimeMicroseconds(1634567890000000L), result.getDate());
@@ -88,4 +90,20 @@ public class EventUseCaseTest {
         verify(eventRepository).save(any(Event.class));
         verify(imageStorageService, never()).uploadImage(any());
     }
+
+    @Test
+    void createEvent_withImage_shouldUploadAndCreateEvent() throws Exception {
+
+        String uploadedImageUrl = "https://cloudinary.com/my-upload.jpg";
+        when(imageStorageService.uploadImage(any())).thenReturn(uploadedImageUrl);
+        when(eventRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Event result = eventUseCaseImpl.createEvent(eventDTO, imageFile);
+
+        assertNotNull(result);
+        assertEquals(uploadedImageUrl, result.getImage());
+        verify(imageStorageService).uploadImage(imageFile);
+        verify(eventRepository).save(any());
+    }
+
 }
