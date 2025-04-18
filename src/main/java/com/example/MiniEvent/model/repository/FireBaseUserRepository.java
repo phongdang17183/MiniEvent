@@ -2,6 +2,7 @@ package com.example.MiniEvent.model.repository;
 
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.web.DTO.request.RegisterDTO;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.auth.AuthErrorCode;
@@ -31,6 +32,10 @@ public class FireBaseUserRepository implements UserRepository{
                     .email(request.getEmail())
                     .username(request.getUsername())
                     .id(firebaseUser.getUid())
+                    .phone(request.getPhone())
+                    .createDay(Timestamp.now())
+                    .eventCreate(0)
+                    .eventJoin(0)
                     .build();
 
             firestore.collection("users").document(user.getId()).set(user).get();

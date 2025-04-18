@@ -42,7 +42,7 @@ public class EventUseCaseTest {
     void setUp() {
         GeoPoint location = new GeoPoint(10.7769,106.7009);
         Timestamp date = Timestamp.ofTimeMicroseconds(1634567890000000L);
-        eventDTO = new EventDTO("test event", location, "A test event", date, false, false);
+        eventDTO = new EventDTO("test event", location, "A test event", date, false, false, 50);
 
         event = Event.builder()
                 .id("event123")
@@ -52,6 +52,7 @@ public class EventUseCaseTest {
                 .location(new GeoPoint(10.7769, 106.7009))
                 .privateEvent(false)
                 .gps(false)
+                .limit(50)
                 .createdBy("uid123")
                 .build();
 
@@ -82,6 +83,7 @@ public class EventUseCaseTest {
         assertEquals("A test event", result.getDescription());
         assertFalse(result.getPrivateEvent());
         assertFalse(result.getGps());
+        assertEquals(50, result.getLimit());
         assertEquals(10.7769, result.getLocation().getLatitude(), 0.0001);
         assertEquals(106.7009, result.getLocation().getLongitude(), 0.0001);
         assertEquals("uid123", result.getCreatedBy());

@@ -58,9 +58,9 @@ public class UserControllerTest {
 
     @Test
     void testRegister_Ok() throws Exception {
-        RegisterDTO request = new RegisterDTO("test","test@gmail.com", "123456");
+        RegisterDTO request = new RegisterDTO("test","test@gmail.com", "123456", "0123456789");
 
-        mockMvc.perform(post("/v1/users/register") // 👈 nhớ đúng prefix
+        mockMvc.perform(post("/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
