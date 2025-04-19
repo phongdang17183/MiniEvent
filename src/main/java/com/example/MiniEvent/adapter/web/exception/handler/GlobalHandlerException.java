@@ -1,8 +1,8 @@
-package com.example.MiniEvent.web.exception.handler;
+package com.example.MiniEvent.adapter.web.exception.handler;
 
+import com.example.MiniEvent.adapter.web.exception.BaseApiException;
 import com.example.MiniEvent.web.exception.*;
-import com.example.MiniEvent.web.response.ResponseObject;
-import com.google.firebase.auth.FirebaseAuthException;
+import com.example.MiniEvent.adapter.web.response.ResponseObject;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

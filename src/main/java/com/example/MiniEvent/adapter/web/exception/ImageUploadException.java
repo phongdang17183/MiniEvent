@@ -1,4 +1,4 @@
-package com.example.MiniEvent.web.exception;
+package com.example.MiniEvent.adapter.web.exception;
 
 import org.springframework.http.HttpStatus;
 

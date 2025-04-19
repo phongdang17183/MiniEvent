@@ -1,6 +1,6 @@
 package com.example.MiniEvent.config.security.filter;
 
-import com.example.MiniEvent.web.exception.UnauthorizedException;
+import com.example.MiniEvent.adapter.web.exception.UnauthorizedException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;

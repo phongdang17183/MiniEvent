@@ -1,10 +1,10 @@
 package com.example.MiniEvent.usecase.impl;
 
 import com.example.MiniEvent.model.entity.Event;
-import com.example.MiniEvent.model.repository.EventRepository;
+import com.example.MiniEvent.adapter.repository.EventRepository;
 import com.example.MiniEvent.usecase.inteface.CreateEventUseCase;
 import com.example.MiniEvent.service.inteface.ImageStorageService;
-import com.example.MiniEvent.web.dto.request.CreateEventRequest;
+import com.example.MiniEvent.adapter.web.dto.request.CreateEventRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package com.example.MiniEvent.service.impl;
 
 import com.example.MiniEvent.service.inteface.AuthService;
-import com.example.MiniEvent.web.exception.UnauthorizedException;
-import com.example.MiniEvent.web.exception.UserCreationException;
+import com.example.MiniEvent.adapter.web.exception.UnauthorizedException;
+import com.example.MiniEvent.adapter.web.exception.UserCreationException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;

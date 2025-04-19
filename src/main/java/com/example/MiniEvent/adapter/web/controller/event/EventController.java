@@ -1,9 +1,9 @@
-package com.example.MiniEvent.web.controller.event;
+package com.example.MiniEvent.adapter.web.controller.event;
 
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.usecase.inteface.CreateEventUseCase;
-import com.example.MiniEvent.web.dto.request.CreateEventRequest;
-import com.example.MiniEvent.web.response.ResponseObject;
+import com.example.MiniEvent.adapter.web.dto.request.CreateEventRequest;
+import com.example.MiniEvent.adapter.web.response.ResponseObject;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

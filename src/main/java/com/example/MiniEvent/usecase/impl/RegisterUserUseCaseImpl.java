@@ -1,12 +1,12 @@
 package com.example.MiniEvent.usecase.impl;
 
 import com.example.MiniEvent.model.entity.AppUser;
-import com.example.MiniEvent.model.repository.UserRepository;
+import com.example.MiniEvent.adapter.repository.UserRepository;
 import com.example.MiniEvent.service.inteface.AuthService;
 import com.example.MiniEvent.service.inteface.ImageStorageService;
 import com.example.MiniEvent.usecase.inteface.RegisterUserUseCase;
-import com.example.MiniEvent.web.dto.request.RegisterRequest;
-import com.example.MiniEvent.web.exception.BadRequestException;
+import com.example.MiniEvent.adapter.web.dto.request.RegisterRequest;
+import com.example.MiniEvent.adapter.web.exception.BadRequestException;
 import com.google.cloud.Timestamp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

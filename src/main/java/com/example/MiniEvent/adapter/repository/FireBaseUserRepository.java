@@ -1,4 +1,4 @@
-package com.example.MiniEvent.model.repository;
+package com.example.MiniEvent.adapter.repository;
 
 import com.example.MiniEvent.model.entity.AppUser;
 import com.google.cloud.firestore.DocumentSnapshot;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 @Repository
 @RequiredArgsConstructor

@@ -1,4 +1,4 @@
-package com.example.MiniEvent.web.dto.request;
+package com.example.MiniEvent.adapter.web.dto.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;

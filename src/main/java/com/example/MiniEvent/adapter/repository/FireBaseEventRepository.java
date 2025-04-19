@@ -1,7 +1,6 @@
-package com.example.MiniEvent.model.repository;
+package com.example.MiniEvent.adapter.repository;
 
 
-import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.entity.Event;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;

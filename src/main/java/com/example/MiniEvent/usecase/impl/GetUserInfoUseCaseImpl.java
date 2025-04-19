@@ -1,7 +1,7 @@
 package com.example.MiniEvent.usecase.impl;
 
 import com.example.MiniEvent.model.entity.AppUser;
-import com.example.MiniEvent.model.repository.UserRepository;
+import com.example.MiniEvent.adapter.repository.UserRepository;
 import com.example.MiniEvent.service.inteface.AuthService;
 import com.example.MiniEvent.usecase.inteface.GetUserInfoUseCase;
 import com.google.firebase.auth.FirebaseToken;
