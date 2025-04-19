@@ -15,12 +15,12 @@ public class LoggingAspect {
         log.info("Calling use case method {}", joinPoint.getSignature().getName());
     }
 
-    @Before("execution(* com.example.MiniEvent.controller..*(..))")
+    @Before("execution(* com.example.MiniEvent.adapter.web.controller..*(..))")
     public void logBeforeControllerCall(JoinPoint joinPoint) {
         log.info("Calling controller method {}", joinPoint.getSignature().getName());
     }
 
-    @Before("execution(* com.example.MiniEvent.model.repository..*(..))")
+    @Before("execution(* com.example.MiniEvent.adapter.repository..*(..))")
     public void logBeforeRepositoryCall(JoinPoint joinPoint) {
         log.info("Calling repository method {}", joinPoint.getSignature().getName());
     }
