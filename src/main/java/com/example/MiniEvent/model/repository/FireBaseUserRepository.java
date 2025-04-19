@@ -1,12 +1,16 @@
 package com.example.MiniEvent.model.repository;
 
 import com.example.MiniEvent.model.entity.AppUser;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.auth.AuthErrorCode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Repository
 @RequiredArgsConstructor
@@ -35,6 +39,25 @@ public class FireBaseUserRepository implements UserRepository{
                 return false;
             }
             throw new RuntimeException("Firebase error while checking email: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Optional<AppUser> findByUid(String uid) {
+        try {
+            DocumentSnapshot document = firestore.collection("users").document(uid).get().get();
+            if (!document.exists()) {
+                return Optional.empty();
+            }
+
+            AppUser user = document.toObject(AppUser.class);
+            if (user == null) {
+                return Optional.empty();
+            }
+            return Optional.of(user);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch user by uid: " + e.getMessage(), e);
         }
     }
 }
