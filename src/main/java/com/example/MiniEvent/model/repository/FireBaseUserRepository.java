@@ -1,18 +1,12 @@
 package com.example.MiniEvent.model.repository;
 
 import com.example.MiniEvent.model.entity.AppUser;
-import com.example.MiniEvent.web.dto.request.RegisterRequest;
-import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import com.google.firebase.auth.AuthErrorCode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.UserRecord;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,23 +15,8 @@ public class FireBaseUserRepository implements UserRepository{
     private final FirebaseAuth firebaseAuth;
 
     @Override
-    public AppUser save(RegisterRequest request) {
+    public AppUser save(AppUser user) {
         try {
-            UserRecord.CreateRequest createRequest = new UserRecord.CreateRequest()
-                    .setEmail(request.getEmail())
-                    .setPassword(request.getPassword());
-            UserRecord firebaseUser = firebaseAuth.createUser(createRequest);
-
-            AppUser user = AppUser.builder()
-                    .email(request.getEmail())
-                    .username(request.getUsername())
-                    .id(firebaseUser.getUid())
-                    .phone(request.getPhone())
-                    .createDay(Timestamp.now())
-                    .eventCreate(0)
-                    .eventJoin(0)
-                    .build();
-
             firestore.collection("users").document(user.getId()).set(user).get();
             return user;
         } catch (Exception e) {
@@ -45,18 +24,6 @@ public class FireBaseUserRepository implements UserRepository{
         }
     }
 
-    @Override
-    public Optional<AppUser> findById(String id) {
-        try {
-            DocumentSnapshot snapshot = firestore.collection("users").document(id).get().get();
-            if (!snapshot.exists()) {
-                return Optional.empty();
-            }
-            return Optional.ofNullable(snapshot.toObject(AppUser.class));
-        } catch (Exception e) {
-            throw new RuntimeException("Firestore query failed", e);
-        }
-    }
 
     @Override
     public boolean existsByEmail(String email) {
@@ -70,6 +37,4 @@ public class FireBaseUserRepository implements UserRepository{
             throw new RuntimeException("Firebase error while checking email: " + e.getMessage(), e);
         }
     }
-
-
 }

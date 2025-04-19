@@ -24,8 +24,8 @@ public class EventController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createEvent(
-            @Valid @RequestPart("event") CreateEventRequest createEventRequest,
-            @RequestPart("image") MultipartFile image ) throws Exception {
+            @Valid @RequestPart(value = "event") CreateEventRequest createEventRequest,
+            @RequestPart(value = "image", required = false) MultipartFile image ) {
         Event event = eventUseCase.createEvent(createEventRequest, image);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseObject.builder()

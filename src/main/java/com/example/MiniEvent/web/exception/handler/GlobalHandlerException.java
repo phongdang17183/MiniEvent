@@ -1,7 +1,7 @@
-package com.example.MiniEvent.web.exception;
+package com.example.MiniEvent.web.exception.handler;
 
+import com.example.MiniEvent.web.exception.*;
 import com.example.MiniEvent.web.response.ResponseObject;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuthException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -10,8 +10,6 @@ import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-import java.util.concurrent.ExecutionException;
 
 @RestControllerAdvice
 public class GlobalHandlerException {
@@ -46,20 +44,12 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ResponseObject.builder()
                         .message(message)
+                        .status(HttpStatus.BAD_REQUEST.value())
                         .data(null)
                         .build()
         );
     }
 
-    @ExceptionHandler({ExecutionException.class, InterruptedException.class})
-    public ResponseEntity<ResponseObject> handleFirestoreExceptions(Exception ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ResponseObject.builder()
-                        .message("Failed to process Firestore operation: " + ex.getMessage())
-                        .data(null)
-                        .build()
-        );
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ResponseObject> handleValidationExceptions(MethodArgumentNotValidException ex) {
@@ -70,6 +60,7 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ResponseObject.builder()
                         .message(message)
+                        .status(400)
                         .data(null)
                         .build()
         );
@@ -86,26 +77,13 @@ public class GlobalHandlerException {
         );
     }
 
-    @ExceptionHandler(FirebaseException.class)
-    public ResponseEntity<ResponseObject> handleFirebaseException(FirebaseException ex) {
-        return ResponseEntity.badRequest().body(
-                ResponseObject.builder()
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .message("Failed to process Firebase method: " + ex.getMessage())
-                        .data(null)
-                        .build()
-        );
-    }
-
-    @ExceptionHandler(FirebaseAuthException.class)
-    public ResponseEntity<ResponseObject> handleFirebaseAuthException(FirebaseAuthException ex) {
-        return ResponseEntity.badRequest().body(
-                ResponseObject.builder()
-                        .status(HttpStatus.BAD_REQUEST.value())
-                        .message("Failed when authorize by Firebase: " + ex.getMessage())
-                        .data(null)
-                        .build()
-        );
+    @ExceptionHandler(BaseApiException.class)
+    public ResponseEntity<?> handleBaseApiException(BaseApiException ex) {
+        return ResponseEntity.status(ex.getStatus())
+                .body(ResponseObject.builder()
+                        .status(ex.getStatus().value())
+                        .message(ex.getMessage())
+                        .build());
     }
 
 }

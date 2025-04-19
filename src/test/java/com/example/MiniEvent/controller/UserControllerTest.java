@@ -12,10 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.multipart.MultipartFile;
 
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,14 +60,22 @@ public class UserControllerTest {
             }
         }
     }
-
     @Test
-    void testRegister_Ok() throws Exception {
-        RegisterRequest request = new RegisterRequest("test","test@gmail.com", "123456", "0123456789");
+    void register_success_withoutImage() throws Exception {
+        RegisterRequest request = new RegisterRequest("test", "test@gmail.com", "123456", "0123456789");
+        String json = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(post("/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+        MockMultipartFile infoPart = new MockMultipartFile(
+                "info",
+                "info.json",
+                "application/json",
+                json.getBytes()
+        );
+
+        mockMvc.perform(multipart("/v1/users/register")
+                        .file(infoPart)
+                        .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk());
     }
+
 }

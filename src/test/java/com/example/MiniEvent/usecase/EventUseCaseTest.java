@@ -104,6 +104,7 @@ public class EventUseCaseTest {
 
         assertNotNull(result);
         assertEquals(uploadedImageUrl, result.getImage());
+
         verify(imageStorageService).uploadImage(imageFile);
         verify(eventRepository).save(any());
     }

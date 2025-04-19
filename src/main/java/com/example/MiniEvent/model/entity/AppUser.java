@@ -20,4 +20,5 @@ public class AppUser {
     private Integer eventCreate;
     private Integer eventJoin;
     private String phone;
+    private String image;
 }

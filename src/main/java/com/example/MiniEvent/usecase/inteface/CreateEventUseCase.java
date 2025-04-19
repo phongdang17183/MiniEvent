@@ -5,5 +5,5 @@ import com.example.MiniEvent.web.dto.request.CreateEventRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface CreateEventUseCase {
-    Event createEvent(CreateEventRequest createEventRequest, MultipartFile image) throws Exception;
+    Event createEvent(CreateEventRequest createEventRequest, MultipartFile image);
 }

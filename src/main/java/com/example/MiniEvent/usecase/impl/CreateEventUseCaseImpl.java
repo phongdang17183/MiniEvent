@@ -20,7 +20,7 @@ public class CreateEventUseCaseImpl implements CreateEventUseCase {
     private final ImageStorageService imageStorageService;
 
     @Override
-    public Event createEvent(CreateEventRequest eventDTO, MultipartFile image) throws Exception {
+    public Event createEvent(CreateEventRequest eventDTO, MultipartFile image) {
 
         if (eventDTO.getName() == null || eventDTO.getName().isEmpty()) {
             throw new IllegalArgumentException("Event name is required");

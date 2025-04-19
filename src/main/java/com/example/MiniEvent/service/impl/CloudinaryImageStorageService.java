@@ -2,7 +2,9 @@ package com.example.MiniEvent.service.impl;
 
 import com.cloudinary.Cloudinary;
 import com.example.MiniEvent.service.inteface.ImageStorageService;
+import com.example.MiniEvent.web.exception.ImageUploadException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,12 +24,12 @@ public class CloudinaryImageStorageService implements ImageStorageService {
     );
 
     @Override
-    public String uploadImage(MultipartFile image) throws Exception {
+    public String uploadImage(MultipartFile image) {
         try {
             Map result = cloudinary.uploader().upload(image.getBytes(), options);
             return result.get("secure_url").toString();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to upload image", e);
+        } catch (Exception e) {
+            throw new ImageUploadException("Failed to upload image to cloudinary " , HttpStatus.BAD_REQUEST, e);
         }
     }
 }

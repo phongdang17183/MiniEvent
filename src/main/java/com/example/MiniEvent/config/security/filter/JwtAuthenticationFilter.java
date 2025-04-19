@@ -1,5 +1,6 @@
 package com.example.MiniEvent.config.security.filter;
 
+import com.example.MiniEvent.web.exception.UnauthorizedException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
@@ -8,8 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -39,6 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 log.info("✅ Authenticated user with uid: {}", uid);
             } catch (FirebaseAuthException e) {
                 log.error("❌ Firebase token verification failed", e);
+                throw new UnauthorizedException("Invalid Firebase token", HttpStatus.UNAUTHORIZED, e);
             }
         }
 
