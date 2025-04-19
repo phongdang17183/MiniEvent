@@ -38,8 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.info("✅ Authenticated user with uid: {}", uid);
             } catch (FirebaseAuthException e) {
-                log.error("❌ Firebase token verification failed", e);
-                throw new UnauthorizedException("Invalid Firebase token", HttpStatus.UNAUTHORIZED, e);
+                log.error("❌ Firebase token verification failed");
             }
         }
 
