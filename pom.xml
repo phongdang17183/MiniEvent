@@ -29,7 +29,8 @@
 	<properties>
 		<java.version>21</java.version>
 		<bytebuddy.agent.path>${settings.localRepository}/net/bytebuddy/byte-buddy-agent/1.15.11/byte-buddy-agent-1.15.11.jar</bytebuddy.agent.path>
-<!--		<maven.surefire.debug>-javaagent:/path/to/byte-buddy-agent.jar</maven.surefire.debug>-->
+		<org.mapstruct.version>1.6.3</org.mapstruct.version>
+		<!--		<maven.surefire.debug>-javaagent:/path/to/byte-buddy-agent.jar</maven.surefire.debug>-->
 	</properties>
 	<dependencies>
 		<dependency>
@@ -49,6 +50,11 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${org.mapstruct.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>io.github.cdimascio</groupId>
 			<artifactId>java-dotenv</artifactId>
@@ -103,6 +109,11 @@
 						<path>
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${org.mapstruct.version}</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>

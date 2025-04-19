@@ -1,7 +1,6 @@
 package com.example.MiniEvent.adapter.web.exception.handler;
 
 import com.example.MiniEvent.adapter.web.exception.BaseApiException;
-import com.example.MiniEvent.web.exception.*;
 import com.example.MiniEvent.adapter.web.response.ResponseObject;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
