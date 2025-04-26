@@ -25,7 +25,11 @@ jobs:
       # Step 3: Build with Maven
       - name: Build with Maven
         run: mvn clean install -DskipTests=false
+        env:
+          VERSION: v1
 
       # Step 4: Run tests
       - name: Run tests with Maven
         run: mvn test
+        env:
+          VERSION: v1
