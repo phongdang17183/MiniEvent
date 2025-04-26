@@ -1,0 +1,60 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    expose:
+      - "9090"
+    networks:
+      - app-networks
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    volumes:
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+    expose:
+      - "3000"
+    networks:
+      - app-networks
+
+  MiniEvent:
+    image: brookvita3/minievent:0.0.1
+    container_name: minievent
+    expose:
+      - "8080"
+    networks:
+      - app-networks
+    env_file:
+      - ../.env
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://MiniEvent:8080/actuator/health" ]
+      interval: 30s
+      retries: 3
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - MiniEvent
+      - prometheus
+      - grafana
+    networks:
+      - app-networks
+
+
+networks:
+  app-networks:
+    driver: bridge
+
+volumes:
+  prometheus_data:

@@ -26,6 +26,9 @@ public class WebSecurityConfig {
 
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(prefix + "/users/register").permitAll()
+                .requestMatchers(prefix + "/users/test").permitAll()
+                // internal network
+                .requestMatchers("/actuator/prometheus").permitAll()
                 .anyRequest().authenticated()
         );
 

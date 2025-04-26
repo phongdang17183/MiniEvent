@@ -53,4 +53,15 @@ public class UserController {
         );
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<?> getTest() {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseObject.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Get info user successfully")
+                        .data(null)
+                        .build()
+        );
+    }
+
 }
