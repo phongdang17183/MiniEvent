@@ -10,20 +10,30 @@ import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.ClassPathResource;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 @Profile("prod")
 public class FireBaseConfig {
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        InputStream serviceAccount = getClass().getClassLoader()
-                .getResourceAsStream("serviceAccountKey.json");
 
-        if (serviceAccount == null) {
-            throw new IllegalStateException("Firebase service account file not found in resources");
+        InputStream serviceAccount;
+        String firebaseConfigJson = System.getenv("FIREBASE_CONFIG_JSON");
+
+        if (firebaseConfigJson != null) {
+            serviceAccount = new ByteArrayInputStream(firebaseConfigJson.getBytes(StandardCharsets.UTF_8));
+        } else {
+            ClassPathResource resource = new ClassPathResource("serviceAccountKey.json");
+            if (!resource.exists()) {
+                throw new IllegalStateException("Firebase service account file not found in resources and no environment variable provided");
+            }
+            serviceAccount = resource.getInputStream();
         }
 
         FirebaseOptions options = FirebaseOptions.builder()
