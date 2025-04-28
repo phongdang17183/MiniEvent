@@ -16,6 +16,7 @@ services:
     volumes:
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - grafana_data:/var/lib/grafana
     expose:
       - "3000"
     networks:
@@ -58,3 +59,4 @@ networks:
 
 volumes:
   prometheus_data:
+  grafana_data:
