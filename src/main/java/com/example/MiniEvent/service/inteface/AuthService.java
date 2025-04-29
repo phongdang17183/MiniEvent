@@ -1,9 +1,10 @@
 package com.example.MiniEvent.service.inteface;
 
-import com.google.firebase.auth.FirebaseToken;
-import com.google.firebase.auth.UserRecord;
+import com.example.MiniEvent.model.entity.AuthenticatedUser;
+import com.example.MiniEvent.model.entity.DecodedTokenInfo;
 
 public interface AuthService {
-    UserRecord createUser(String email, String password);
-    FirebaseToken verifyToken(String idToken);
+    AuthenticatedUser createUser(String email, String password);
+    DecodedTokenInfo verifyToken(String idToken);
+    Object login(String email, String password);
 }

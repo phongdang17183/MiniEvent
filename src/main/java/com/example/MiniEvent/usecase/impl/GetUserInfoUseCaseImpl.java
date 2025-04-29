@@ -2,6 +2,7 @@ package com.example.MiniEvent.usecase.impl;
 
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.adapter.repository.UserRepository;
+import com.example.MiniEvent.model.entity.DecodedTokenInfo;
 import com.example.MiniEvent.service.inteface.AuthService;
 import com.example.MiniEvent.usecase.inteface.GetUserInfoUseCase;
 import com.google.firebase.auth.FirebaseToken;
@@ -20,7 +21,7 @@ public class GetUserInfoUseCaseImpl implements GetUserInfoUseCase {
 
     @Override
     public Optional<AppUser> getInfo(String idToken) {
-        FirebaseToken decodedToken = authService.verifyToken(idToken);
+        DecodedTokenInfo decodedToken = authService.verifyToken(idToken);
         String uid = decodedToken.getUid();
 
         return userRepository.findByUid(uid);

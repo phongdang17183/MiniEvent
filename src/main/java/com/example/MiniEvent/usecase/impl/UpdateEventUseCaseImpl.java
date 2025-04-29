@@ -5,6 +5,7 @@ import com.example.MiniEvent.adapter.web.dto.mapper.EventMapper;
 import com.example.MiniEvent.adapter.web.dto.request.UpdateEventRequestDTO;
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
 import com.example.MiniEvent.adapter.web.exception.ForbiddenException;
+import com.example.MiniEvent.model.entity.DecodedTokenInfo;
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.service.inteface.AuthService;
 import com.example.MiniEvent.service.inteface.ImageStorageService;
@@ -26,7 +27,7 @@ public class UpdateEventUseCaseImpl implements UpdateEventUseCase {
     @Override
     public Event updateEvent(UpdateEventRequestDTO updateEventRequestDTO) {
 
-        FirebaseToken decodedToken = authService.verifyToken(updateEventRequestDTO.getIdToken());
+        DecodedTokenInfo decodedToken = authService.verifyToken(updateEventRequestDTO.getIdToken());
         String uid = decodedToken.getUid();
 
         Event event = eventRepository.findById(updateEventRequestDTO.getEventId())

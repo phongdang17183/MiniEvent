@@ -3,6 +3,7 @@ package com.example.MiniEvent.usecase;
 import com.example.MiniEvent.adapter.web.dto.mapper.EventMapper;
 import com.example.MiniEvent.adapter.web.dto.request.UpdateEventRequest;
 import com.example.MiniEvent.adapter.web.dto.request.UpdateEventRequestDTO;
+import com.example.MiniEvent.model.entity.DecodedTokenInfo;
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.adapter.repository.EventRepository;
 import com.example.MiniEvent.service.inteface.AuthService;
@@ -12,7 +13,6 @@ import com.example.MiniEvent.adapter.web.dto.request.CreateEventRequest;
 import com.example.MiniEvent.usecase.impl.UpdateEventUseCaseImpl;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.GeoPoint;
-import com.google.firebase.auth.FirebaseToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -140,11 +140,11 @@ public class EventUseCaseTest {
         Timestamp updateDate = Timestamp.ofTimeMicroseconds(1745147570000000L);
         UpdateEventRequest updateEventRequest = new UpdateEventRequest("update event", updateLocation, "A update test event", updateDate, true, true, 30);
         UpdateEventRequestDTO updateEventRequestDTO = new UpdateEventRequestDTO(idToken, eventId, updateEventRequest, null);
-        FirebaseToken firebaseToken = mock(FirebaseToken.class);
+        DecodedTokenInfo decodedTokenInfo = mock(DecodedTokenInfo.class);
 
 
-        when(firebaseToken.getUid()).thenReturn(uid);
-        when(authService.verifyToken(idToken)).thenReturn(firebaseToken);
+        when(decodedTokenInfo.getUid()).thenReturn(uid);
+        when(authService.verifyToken(idToken)).thenReturn(decodedTokenInfo);
         when(eventRepository.findById("event123")).thenReturn(Optional.ofNullable(event));
         doAnswer(invocation -> {
             event.setName(updateEventRequest.getName());

@@ -1,6 +1,8 @@
 package com.example.MiniEvent.adapter.web.controller.user;
 
+import com.example.MiniEvent.adapter.web.dto.request.LoginRequest;
 import com.example.MiniEvent.usecase.inteface.GetUserInfoUseCase;
+import com.example.MiniEvent.usecase.inteface.LoginUserUseCase;
 import com.example.MiniEvent.usecase.inteface.RegisterUserUseCase;
 import com.example.MiniEvent.adapter.web.dto.request.RegisterRequest;
 import com.example.MiniEvent.model.entity.AppUser;
@@ -20,6 +22,7 @@ public class UserController {
 
     private final RegisterUserUseCase registerUserUseCase;
     private final GetUserInfoUseCase getUserInfoUseCase;
+    private final LoginUserUseCase loginUserUseCase;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
@@ -49,6 +52,17 @@ public class UserController {
                         .status(HttpStatus.OK.value())
                         .message("Get info user successfully")
                         .data(user)
+                        .build()
+        );
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseObject.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Get login info successfully")
+                        .data(loginUserUseCase.login(loginRequest))
                         .build()
         );
     }
