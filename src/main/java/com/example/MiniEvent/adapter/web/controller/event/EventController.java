@@ -6,6 +6,7 @@ import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.usecase.inteface.CreateEventUseCase;
 import com.example.MiniEvent.adapter.web.dto.request.CreateEventRequest;
 import com.example.MiniEvent.adapter.web.response.ResponseObject;
+import com.example.MiniEvent.usecase.inteface.GetPublicEventUseCase;
 import com.example.MiniEvent.usecase.inteface.UpdateEventUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/events")
@@ -22,6 +25,7 @@ public class EventController {
 
     private final CreateEventUseCase eventUseCase;
     private final UpdateEventUseCase updateEventUseCase;
+    private final GetPublicEventUseCase getPublicEventUseCase;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createEvent(
@@ -58,6 +62,18 @@ public class EventController {
                         .status(HttpStatus.OK.value())
                         .message("Update event successfully")
                         .data(event)
+                        .build()
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getPublicEvent() {
+        List<Event> eventList = getPublicEventUseCase.getPublicEvent();
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseObject.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Get all public event successfully")
+                        .data(eventList)
                         .build()
         );
     }
