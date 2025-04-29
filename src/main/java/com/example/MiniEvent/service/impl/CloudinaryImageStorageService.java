@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Map;
 
 @Service
@@ -29,6 +31,16 @@ public class CloudinaryImageStorageService implements ImageStorageService {
             return result.get("secure_url").toString();
         } catch (Exception e) {
             throw new ImageUploadException("Failed to upload image to cloudinary " , HttpStatus.BAD_REQUEST, e);
+        }
+    }
+
+    @Override
+    public String uploadImage(byte[] imageBytes) {
+        try {
+            Map result = cloudinary.uploader().upload(imageBytes, options);
+            return result.get("secure_url").toString();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to upload avatar image", e);
         }
     }
 }

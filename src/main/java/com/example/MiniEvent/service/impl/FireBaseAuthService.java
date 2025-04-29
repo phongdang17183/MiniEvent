@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,7 +23,8 @@ public class FireBaseAuthService implements AuthService {
 
     private final FirebaseAuth firebaseAuth;
     private final FireBaseProperties fireBaseProperties;
-    private final WebClient webClient;
+    @Qualifier("firebaseWebClient")
+    private final WebClient firebaseWebClient;
 
     @Override
     public AuthenticatedUser createUser(String email, String password) {
@@ -64,7 +66,7 @@ public class FireBaseAuthService implements AuthService {
                 "returnSecureToken", true
         );
 
-        return webClient.post()
+        return firebaseWebClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/accounts:signInWithPassword")
                         .queryParam("key", fireBaseProperties.getApiKey())

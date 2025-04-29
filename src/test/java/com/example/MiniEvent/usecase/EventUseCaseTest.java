@@ -110,14 +110,14 @@ public class EventUseCaseTest {
         assertNull(result.getImage());
 
         verify(eventRepository).save(any(Event.class));
-        verify(imageStorageService, never()).uploadImage(any());
+        verify(imageStorageService, never()).uploadImage((MultipartFile) any());
     }
 
     @Test
     void createEvent_withImage_shouldUploadAndCreateEvent() {
 
         String uploadedImageUrl = "https://cloudinary.com/my-upload.jpg";
-        when(imageStorageService.uploadImage(any())).thenReturn(uploadedImageUrl);
+        when(imageStorageService.uploadImage((MultipartFile) any())).thenReturn(uploadedImageUrl);
         when(eventRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         Event result = createEventUseCase.createEvent(createEventRequest, imageFile);
@@ -164,7 +164,7 @@ public class EventUseCaseTest {
         verify(authService).verifyToken(idToken);
         verify(eventRepository).findById(eventId);
         verify(eventRepository).save(event);
-        verify(imageStorageService, never()).uploadImage(any());
+        verify(imageStorageService, never()).uploadImage((MultipartFile) any());
         verify(eventMapper).updateEventFromRequest(updateEventRequest, event);
     }
 

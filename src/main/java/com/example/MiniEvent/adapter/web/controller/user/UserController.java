@@ -26,9 +26,8 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
-            @Valid @RequestPart(value = "info") RegisterRequest request,
-            @RequestPart(value = "image", required = false) MultipartFile image) {
-        AppUser user = registerUserUseCase.register(request, image);
+            @Valid @RequestBody RegisterRequest request) {
+        AppUser user = registerUserUseCase.register(request);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseObject.builder()
                         .status(HttpStatus.OK.value())
