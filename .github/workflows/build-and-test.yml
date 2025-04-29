@@ -10,6 +10,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      VERSION: ${{ secrets.VERSION }}
+      FIREBASE_CONFIG_JSON: ${{ secrets.FIREBASE_CONFIG_JSON }}
+      DISTANCE_THRESHOLD: ${{ secrets.DISTANCE_THRESHOLD }}
+      CLOUDINARY_NAME: ${{ secrets.CLOUDINARY_NAME }}
+      CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+      CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+      FIREBASE_APIKEY: ${{ secrets.FIREBASE_APIKEY }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -22,20 +31,6 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install -DskipTests=false
-        env:
-          VERSION: ${{ secrets.VERSION }}
-          FIREBASE_CONFIG_JSON: ${{ secrets.FIREBASE_CONFIG_JSON }}
-          DISTANCE_THRESHOLD: ${{ secrets.DISTANCE_THRESHOLD }}
-          CLOUDINARY_NAME: ${{ secrets.CLOUDINARY_NAME }}
-          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
 
       - name: Run tests with Maven
         run: mvn test
-        env:
-          VERSION: ${{ secrets.VERSION }}
-          FIREBASE_CONFIG_JSON: ${{ secrets.FIREBASE_CONFIG_JSON }}
-          DISTANCE_THRESHOLD: ${{ secrets.DISTANCE_THRESHOLD }}
-          CLOUDINARY_NAME: ${{ secrets.CLOUDINARY_NAME }}
-          CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-          CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
