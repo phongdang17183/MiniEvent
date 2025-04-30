@@ -8,6 +8,7 @@ import com.example.MiniEvent.adapter.web.dto.request.CreateEventRequest;
 import com.example.MiniEvent.adapter.web.response.ResponseObject;
 import com.example.MiniEvent.usecase.inteface.GetPublicEventUseCase;
 import com.example.MiniEvent.usecase.inteface.UpdateEventUseCase;
+import com.google.cloud.Timestamp;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -67,8 +69,14 @@ public class EventController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getPublicEvent() {
-        List<Event> eventList = getPublicEventUseCase.getPublicEvent();
+    public ResponseEntity<?> getPublicEvent(
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String lastDate
+    ) {
+        Instant cursor = lastDate != null
+                ? Instant.parse(lastDate)
+                : Instant.now();
+        List<Event> eventList = getPublicEventUseCase.getNextPublicEvents(cursor, pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseObject.builder()
                         .status(HttpStatus.OK.value())
