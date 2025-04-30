@@ -1,7 +1,6 @@
 package com.example.MiniEvent.model.entity;
 
 
-import com.google.cloud.Date;
 import com.google.cloud.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
