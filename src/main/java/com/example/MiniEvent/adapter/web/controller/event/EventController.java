@@ -2,13 +2,13 @@ package com.example.MiniEvent.adapter.web.controller.event;
 
 import com.example.MiniEvent.adapter.web.dto.request.UpdateEventRequest;
 import com.example.MiniEvent.adapter.web.dto.request.UpdateEventRequestDTO;
+import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
+import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.entity.Event;
-import com.example.MiniEvent.usecase.inteface.CreateEventUseCase;
+import com.example.MiniEvent.model.entity.Registration;
+import com.example.MiniEvent.usecase.inteface.*;
 import com.example.MiniEvent.adapter.web.dto.request.CreateEventRequest;
 import com.example.MiniEvent.adapter.web.response.ResponseObject;
-import com.example.MiniEvent.usecase.inteface.GetPublicEventUseCase;
-import com.example.MiniEvent.usecase.inteface.UpdateEventUseCase;
-import com.google.cloud.Timestamp;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
 
@@ -25,15 +29,18 @@ import java.util.List;
 @RequestMapping("/events")
 public class EventController {
 
-    private final CreateEventUseCase eventUseCase;
+    private final CreateEventUseCase createEventUseCase;
     private final UpdateEventUseCase updateEventUseCase;
     private final GetPublicEventUseCase getPublicEventUseCase;
+    private final RegisterEventUseCase registerEventUseCase;
+    private final GetUserInfoUseCase getUserInfoUseCase;
+
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createEvent(
             @Valid @RequestPart(value = "event") CreateEventRequest createEventRequest,
             @RequestPart(value = "image", required = false) MultipartFile image ) {
-        Event event = eventUseCase.createEvent(createEventRequest, image);
+        Event event = createEventUseCase.createEvent(createEventRequest, image);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseObject.builder()
                         .status(HttpStatus.OK.value())
@@ -84,5 +91,26 @@ public class EventController {
                         .data(eventList)
                         .build()
         );
+    }
+
+
+    @GetMapping(value = "/register/{eventId}", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> registerEvent(
+            @PathVariable String eventId,
+            @RequestHeader("Authorization") String authHeader
+    ) throws IOException {
+        String idToken = authHeader.replace("Bearer ", "");
+        AppUser user = getUserInfoUseCase.getInfo(idToken).orElseThrow(
+                () -> new DataNotFoundException("User not found", HttpStatus.NOT_FOUND)
+        );
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        BufferedImage qrImage = registerEventUseCase.registerEvent(eventId, user.getId());
+        ImageIO.write(qrImage, "png", baos);
+        byte[] imageBytes = baos.toByteArray();
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(imageBytes);
     }
 }
