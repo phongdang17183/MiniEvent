@@ -18,6 +18,8 @@ jobs:
       CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
       CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
       FIREBASE_APIKEY: ${{ secrets.FIREBASE_APIKEY }}
+      EMAIL_USERNAME: $ {{ secrets.EMAIL_USERNAME }}
+      EMAIL_PASSWORD: $ {{ secrets.EMAIL_PASSWORD }}
       QR_SECRET_KEY: ${{ secrets.QR_SECRET_KEY }}
 
     steps:
