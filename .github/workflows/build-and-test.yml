@@ -30,8 +30,5 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
-      - name: Build with Maven
+      - name: Test and Build with Maven
         run: mvn clean install -DskipTests=false
-
-      - name: Run tests with Maven
-        run: mvn test
