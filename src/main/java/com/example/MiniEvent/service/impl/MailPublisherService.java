@@ -1,35 +1,29 @@
 package com.example.MiniEvent.service.impl;
 
 import com.example.MiniEvent.adapter.web.exception.EmailException;
+import com.example.MiniEvent.config.rabbitmq.RabbitMQConfig;
 import com.example.MiniEvent.model.entity.EmailDetail;
 import com.example.MiniEvent.service.inteface.EmailService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-public class AppPasswordMailService implements EmailService {
+public class MailPublisherService implements EmailService {
 
-    private final JavaMailSender javaMailSender;
-
-    @Value("${spring.mail.username}")
-    private String emailUsername;
+    private final RabbitTemplate rabbitTemplate;
 
     @Override
     public Void sendEmail(EmailDetail emailDetail) {
-        try{
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(emailDetail.getTo());
-            message.setSubject(emailDetail.getSubject());
-            message.setText(emailDetail.getMsgBody());
-            message.setFrom(emailUsername);
-            javaMailSender.send(message);
-            return null;
+        try {
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.EXCHANGE,
+                RabbitMQConfig.ROUTING_KEY,
+                emailDetail);
+        return null;
         }
         catch (Exception e) {
             throw new EmailException("Error while sending mail", HttpStatus.INTERNAL_SERVER_ERROR, e);
