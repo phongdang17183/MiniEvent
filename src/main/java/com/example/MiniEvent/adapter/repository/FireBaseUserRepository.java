@@ -1,15 +1,19 @@
 package com.example.MiniEvent.adapter.repository;
 
 import com.example.MiniEvent.model.entity.AppUser;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
+import com.google.api.core.ApiFuture;
+import com.google.cloud.Timestamp;
+import com.google.cloud.firestore.*;
 import com.google.firebase.auth.AuthErrorCode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -59,4 +63,34 @@ public class FireBaseUserRepository implements UserRepository{
             throw new RuntimeException("Failed to fetch user by uid: " + e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<AppUser> findByPhone(String phone, Instant cursor) {
+        try {
+            Timestamp firestoreTimestamp = Timestamp.ofTimeSecondsAndNanos(
+                    cursor.getEpochSecond(),
+                    cursor.getNano()
+            );
+
+
+            Query query = firestore.collection("users")
+                    .whereEqualTo("phone", phone)
+                    .orderBy("createDay")
+                    .limit(10)
+                    .startAfter(firestoreTimestamp);
+
+            ApiFuture<QuerySnapshot> future = query.get();
+
+            List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+            return documents.stream()
+                    .map(doc -> doc.toObject(AppUser.class))
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch user by phone number: " + e.getMessage(), e);
+        }
+    }
+
+
 }

@@ -1,6 +1,7 @@
 package com.example.MiniEvent.adapter.web.controller.user;
 
 import com.example.MiniEvent.adapter.web.dto.request.LoginRequest;
+import com.example.MiniEvent.usecase.inteface.GetUserByPhoneUseCase;
 import com.example.MiniEvent.usecase.inteface.GetUserInfoUseCase;
 import com.example.MiniEvent.usecase.inteface.LoginUserUseCase;
 import com.example.MiniEvent.usecase.inteface.RegisterUserUseCase;
@@ -13,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+
+import java.time.Instant;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +26,7 @@ public class UserController {
     private final RegisterUserUseCase registerUserUseCase;
     private final GetUserInfoUseCase getUserInfoUseCase;
     private final LoginUserUseCase loginUserUseCase;
+    private final GetUserByPhoneUseCase getUserByPhoneUseCase;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
@@ -63,6 +67,22 @@ public class UserController {
                         .message("Get login info successfully")
                         .data(loginUserUseCase.login(loginRequest))
                         .build()
+        );
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> getUserByPhone(
+            @Valid @RequestParam String phone,
+            @RequestParam(required = false) String lastDate) {
+        Instant cursor = Instant.parse(lastDate);
+        List<AppUser> users = getUserByPhoneUseCase.findByPhone(phone, cursor);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseObject.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("List users search by phone")
+                        .data(users)
+                        .build()
+
         );
     }
 
