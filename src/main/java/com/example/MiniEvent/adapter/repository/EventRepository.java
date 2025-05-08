@@ -1,6 +1,7 @@
 package com.example.MiniEvent.adapter.repository;
 
 import com.example.MiniEvent.model.entity.Event;
+import com.example.MiniEvent.model.entity.EventTag;
 
 import java.time.Instant;
 import java.util.List;
@@ -10,4 +11,5 @@ public interface EventRepository {
     Event save(Event event);
     Optional<Event> findById(String id);
     List<Event> findNextPublicEvents(Instant cursorDate, int pageSize);
+    List<Event> findNextPublicEventsFilter(Instant cursorDate, int pageSize, EventTag eventTag);
 }

@@ -28,6 +28,9 @@ public class CreateEventUseCaseImpl implements CreateEventUseCase {
         if (eventDTO.getDate() == null) {
             throw new IllegalArgumentException("Event date is required");
         }
+        if(eventDTO.getEventTag() == null ){
+            throw new IllegalArgumentException("Event tag is required");
+        }
 
         String uid = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -46,6 +49,7 @@ public class CreateEventUseCaseImpl implements CreateEventUseCase {
                 .limit(eventDTO.getLimit())
                 .gps(eventDTO.getGps())
                 .image(imageUrl)
+                .eventTag(eventDTO.getEventTag())
                 .createdBy(uid)
                 .build();
 

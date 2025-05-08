@@ -5,6 +5,7 @@ import com.example.MiniEvent.adapter.web.dto.request.UpdateEventRequestDTO;
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.entity.Event;
+import com.example.MiniEvent.model.entity.EventTag;
 import com.example.MiniEvent.model.entity.Registration;
 import com.example.MiniEvent.usecase.inteface.*;
 import com.example.MiniEvent.adapter.web.dto.request.CreateEventRequest;
@@ -84,6 +85,26 @@ public class EventController {
                 ? Instant.parse(lastDate)
                 : Instant.now();
         List<Event> eventList = getPublicEventUseCase.getNextPublicEvents(cursor, pageSize);
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseObject.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Get all public event successfully")
+                        .data(eventList)
+                        .build()
+        );
+    }
+    @GetMapping(value ="/{tag}")
+    public ResponseEntity<?> getPublicEventFilter(
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestParam(required = false) String lastDate,
+            @PathVariable EventTag tag
+    ) {
+        Instant cursor = lastDate != null
+                ? Instant.parse(lastDate)
+                : Instant.now();
+        List<Event> eventList = getPublicEventUseCase.getNextPublicEventsFilter(cursor, pageSize,tag);
+
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseObject.builder()
                         .status(HttpStatus.OK.value())

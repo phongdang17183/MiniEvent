@@ -2,6 +2,7 @@ package com.example.MiniEvent.adapter.repository;
 
 
 import com.example.MiniEvent.model.entity.Event;
+import com.example.MiniEvent.model.entity.EventTag;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.*;
@@ -66,6 +67,33 @@ public class FireBaseEventRepository implements EventRepository{
 
         } catch (Exception e) {
             throw new RuntimeException("Firestore query for findNextPublicEvents failed", e);
+        }
+    }
+
+    @Override
+    public List<Event> findNextPublicEventsFilter(Instant cursorDate, int pageSize, EventTag eventTag) {
+
+        Timestamp firestoreTimestamp = Timestamp.ofTimeSecondsAndNanos(
+                cursorDate.getEpochSecond(),
+                cursorDate.getNano()
+        );
+
+        Query query = firestore.collection("events")
+                .whereEqualTo("privateEvent", false)
+                .whereEqualTo("eventTag", eventTag.name())
+//                .whereGreaterThan("date", firestoreTimestamp)
+                .orderBy("date")
+                .limit(pageSize);
+        try {
+            ApiFuture<QuerySnapshot> future = query.get();
+            QuerySnapshot snapshot = future.get();
+            return snapshot.getDocuments()
+                    .stream()
+                    .map(doc -> doc.toObject(Event.class))
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            throw new RuntimeException("Firestore query for findNextPublicEvents failed: " + e.getCause());
         }
     }
 }

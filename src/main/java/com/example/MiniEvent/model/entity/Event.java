@@ -22,4 +22,5 @@ public class Event {
     private Boolean privateEvent;
     private Integer limit;
     private Boolean gps;
+    private EventTag eventTag;
 }
