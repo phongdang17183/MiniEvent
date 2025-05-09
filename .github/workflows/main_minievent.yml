@@ -14,7 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read #This is required for actions/checkout
-
+    env:
+      VERSION: ${{ secrets.VERSION }}
+      FIREBASE_CONFIG_JSON: ${{ secrets.FIREBASE_CONFIG_JSON }}
+      DISTANCE_THRESHOLD: ${{ secrets.DISTANCE_THRESHOLD }}
+      CLOUDINARY_NAME: ${{ secrets.CLOUDINARY_NAME }}
+      CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+      CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+      FIREBASE_APIKEY: ${{ secrets.FIREBASE_APIKEY }}
+      EMAIL_USERNAME: $ {{ secrets.EMAIL_USERNAME }}
+      QR_SECRET_KEY: ${{ secrets.QR_SECRET_KEY }}
     steps:
       - uses: actions/checkout@v4
 
