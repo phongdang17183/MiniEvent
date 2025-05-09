@@ -1,6 +1,5 @@
 package com.example.MiniEvent.config.swagger;
 
-import com.example.MiniEvent.config.AppProperties;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
@@ -14,16 +13,11 @@ import java.util.List;
 
 @Configuration
 public class OpenApiConfig {
-    private final AppProperties appProperties;
-
-    public OpenApiConfig(AppProperties appProperties) {
-        this.appProperties = appProperties;
-    }
 
     @Bean
     public OpenAPI defineOpenApi() {
         Server server = new Server();
-        server.setUrl("http://localhost:8080" + appProperties.getApiPrefix());
+        server.setUrl("http://localhost:8080");
         server.setDescription("Development");
 
         Contact myContact = new Contact();
