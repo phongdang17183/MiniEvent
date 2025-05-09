@@ -28,6 +28,8 @@ public class WebSecurityConfig {
                 .requestMatchers(prefix + "/users/register").permitAll()
                 .requestMatchers(prefix + "/users/test").permitAll()
                 .requestMatchers(prefix + "/users/login").permitAll()
+                .requestMatchers(prefix + "/swagger-ui/**").permitAll()
+                .requestMatchers(prefix + "/api-docs/**").permitAll()
                 // internal network
                 .requestMatchers("/actuator/prometheus").permitAll()
                 .anyRequest().authenticated()
