@@ -6,6 +6,7 @@ import com.example.MiniEvent.adapter.web.dto.request.UpdateEventRequestDTO;
 import com.example.MiniEvent.model.entity.DecodedTokenInfo;
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.adapter.repository.EventRepository;
+import com.example.MiniEvent.model.entity.EventTag;
 import com.example.MiniEvent.service.inteface.AuthService;
 import com.example.MiniEvent.usecase.impl.CreateEventUseCaseImpl;
 import com.example.MiniEvent.service.inteface.ImageStorageService;
@@ -62,7 +63,7 @@ public class EventUseCaseTest {
     void setUp() {
         GeoPoint location = new GeoPoint(10.7769,106.7009);
         Timestamp date = Timestamp.ofTimeMicroseconds(1634567890000000L);
-        createEventRequest = new CreateEventRequest("test event", location, "A test event", date, false, false, 50);
+        createEventRequest = new CreateEventRequest("test event", location, "A test event", date, false, false, 50, EventTag.SPORTS);
 
         event = Event.builder()
                 .id("event123")
