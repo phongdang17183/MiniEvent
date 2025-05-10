@@ -19,4 +19,5 @@ public class Checkin {
     private String eventId;
     private GeoPoint location;
     private Date date;
+    private CheckinMethod checkinMethod;
 }

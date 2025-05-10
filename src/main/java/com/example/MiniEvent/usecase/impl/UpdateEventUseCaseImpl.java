@@ -21,19 +21,15 @@ public class UpdateEventUseCaseImpl implements UpdateEventUseCase {
 
     private final EventRepository eventRepository;
     private final EventMapper eventMapper;
-    private final AuthService authService;
     private final ImageStorageService imageStorageService;
 
     @Override
     public Event updateEvent(UpdateEventRequestDTO updateEventRequestDTO) {
 
-        DecodedTokenInfo decodedToken = authService.verifyToken(updateEventRequestDTO.getIdToken());
-        String uid = decodedToken.getUid();
-
         Event event = eventRepository.findById(updateEventRequestDTO.getEventId())
                 .orElseThrow(() -> new DataNotFoundException("Event not found", HttpStatus.NOT_FOUND));
 
-        if (!event.getCreatedBy().equals(uid)) {
+        if (!event.getCreatedBy().equals(updateEventRequestDTO.getUserId())) {
             throw new ForbiddenException("You are not allowed to update this event", HttpStatus.FORBIDDEN);
         }
 

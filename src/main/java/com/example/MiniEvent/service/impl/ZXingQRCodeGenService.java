@@ -58,6 +58,19 @@ public class ZXingQRCodeGenService implements QRCodeGenService {
         }
     }
 
+    @Override
+    public QRCodeData getData(String token) {
+        try {
+            Claims claims = parseJwt(token);
+            String userId = claims.get("userId", String.class);
+            String eventId = claims.get("eventId", String.class);
+            return new QRCodeData(userId, eventId);
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Error in get data QR Code");
+        }
+    }
+
     private Claims parseJwt(String token) {
         try {
             return Jwts.parser()

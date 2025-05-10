@@ -7,6 +7,7 @@ import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.entity.EventTag;
+import com.example.MiniEvent.model.entity.QRCodeData;
 import com.example.MiniEvent.usecase.inteface.*;
 import com.example.MiniEvent.adapter.web.dto.request.CreateEventRequest;
 import com.example.MiniEvent.adapter.web.response.ResponseObject;
@@ -59,11 +60,14 @@ public class EventController {
             @Valid @RequestPart(value = "updateEvent") UpdateEventRequest updateEventRequest,
             @RequestPart(value = "image", required = false) MultipartFile image ) {
         String idToken = authHeader.replace("Bearer ", "");
+        AppUser user = getUserInfoUseCase.getInfo(idToken).orElseThrow(
+                () -> new DataNotFoundException("User not found", HttpStatus.NOT_FOUND)
+        );
 
         UpdateEventRequestDTO requestDTO = UpdateEventRequestDTO.builder()
                 .eventId(eventId)
                 .request(updateEventRequest)
-                .idToken(idToken)
+                .userId(user.getId())
                 .image(image)
                 .build();
 
@@ -136,8 +140,8 @@ public class EventController {
                 .body(imageBytes);
     }
 
-    @PostMapping(value = "/checkin")
-    public ResponseEntity<?> checkinEvent(
+    @PostMapping(value = "/checkin/gps")
+    public ResponseEntity<?> checkinEventGPS(
             @Valid @RequestBody CheckinRequest checkinRequest,
             @RequestHeader("Authorization") String authHeader,
             @RequestParam String eventId) {
@@ -149,9 +153,28 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseObject.builder()
                         .status(HttpStatus.OK.value())
-                        .message("Checkin event successfully")
+                        .message("Checkin event by GPS successfully")
                         .data(checkinEventUseCase.CheckinEventGPS(checkinRequest, eventId, user.getId()))
                         .build()
         );
     }
+
+    @PostMapping(value = "/checkin/qr")
+    public ResponseEntity<?> checkinEventQR(
+            @Valid @RequestBody String token,
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam String eventId) {
+        String idToken = authHeader.replace("Bearer ", "");
+        AppUser user = getUserInfoUseCase.getInfo(idToken).orElseThrow(
+                () -> new DataNotFoundException("User not found", HttpStatus.NOT_FOUND)
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseObject.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Checkin event by QR successfully")
+                        .data(checkinEventUseCase.CheckinEventQR(token, eventId))
+                        .build()
+        );
+    }
+
 }
