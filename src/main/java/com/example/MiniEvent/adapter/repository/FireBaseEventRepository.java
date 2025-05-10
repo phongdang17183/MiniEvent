@@ -54,7 +54,7 @@ public class FireBaseEventRepository implements EventRepository{
 
         Query query = firestore.collection("events")
                 .whereEqualTo("privateEvent", false)
-                .whereGreaterThan("date", firestoreTimestamp)
+                .whereLessThan("date", firestoreTimestamp)
                 .orderBy("date")
                 .limit(pageSize);
         try {
@@ -81,7 +81,7 @@ public class FireBaseEventRepository implements EventRepository{
         Query query = firestore.collection("events")
                 .whereEqualTo("privateEvent", false)
                 .whereEqualTo("eventTag", eventTag.name())
-//                .whereGreaterThan("date", firestoreTimestamp)
+                .whereLessThan("date", firestoreTimestamp)
                 .orderBy("date")
                 .limit(pageSize);
         try {
