@@ -7,13 +7,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class Checkin {
+    private String id;
     private String userId;
     private String eventId;
     private GeoPoint location;
-    private Timestamp date;
+    private Date date;
 }
