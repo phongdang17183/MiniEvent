@@ -4,6 +4,7 @@ import com.example.MiniEvent.config.geopoint.GeoPointDeserializer;
 import com.example.MiniEvent.config.geopoint.GeoPointSerializer;
 import com.example.MiniEvent.config.timestamp.TimestampDeserializer;
 import com.example.MiniEvent.config.timestamp.TimestampSerializer;
+import com.example.MiniEvent.model.entity.EventTag;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.cloud.Timestamp;
@@ -39,4 +40,7 @@ public class UpdateEventRequest {
 
     @Positive
     private Integer limit;
+
+    private EventTag eventTag;
+    private String address;
 }

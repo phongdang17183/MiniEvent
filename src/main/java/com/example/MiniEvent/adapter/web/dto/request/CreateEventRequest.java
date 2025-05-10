@@ -50,4 +50,7 @@ public class CreateEventRequest {
     @NotNull
     private EventTag eventTag;
 
+    @NotEmpty
+    private String address;
+
 }
