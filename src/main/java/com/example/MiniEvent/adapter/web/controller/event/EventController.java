@@ -1,12 +1,12 @@
 package com.example.MiniEvent.adapter.web.controller.event;
 
+import com.example.MiniEvent.adapter.web.dto.request.CheckinRequest;
 import com.example.MiniEvent.adapter.web.dto.request.UpdateEventRequest;
 import com.example.MiniEvent.adapter.web.dto.request.UpdateEventRequestDTO;
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.entity.EventTag;
-import com.example.MiniEvent.model.entity.Registration;
 import com.example.MiniEvent.usecase.inteface.*;
 import com.example.MiniEvent.adapter.web.dto.request.CreateEventRequest;
 import com.example.MiniEvent.adapter.web.response.ResponseObject;
@@ -35,6 +35,7 @@ public class EventController {
     private final GetPublicEventUseCase getPublicEventUseCase;
     private final RegisterEventUseCase registerEventUseCase;
     private final GetUserInfoUseCase getUserInfoUseCase;
+    private final CheckinEventUseCase checkinEventUseCase;
 
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -133,5 +134,24 @@ public class EventController {
                 .ok()
                 .contentType(MediaType.IMAGE_PNG)
                 .body(imageBytes);
+    }
+
+    @PostMapping(value = "/checkin")
+    public ResponseEntity<?> checkinEvent(
+            @Valid @RequestBody CheckinRequest checkinRequest,
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam String eventId) {
+
+        String idToken = authHeader.replace("Bearer ", "");
+        AppUser user = getUserInfoUseCase.getInfo(idToken).orElseThrow(
+                () -> new DataNotFoundException("User not found", HttpStatus.NOT_FOUND)
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseObject.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Checkin event successfully")
+                        .data(checkinEventUseCase.CheckinEventGPS(checkinRequest, eventId, user.getId()))
+                        .build()
+        );
     }
 }
