@@ -140,12 +140,11 @@ public class EventUseCaseTest {
         GeoPoint updateLocation = new GeoPoint(11.7769,13.7009);
         Timestamp updateDate = Timestamp.ofTimeMicroseconds(1745147570000000L);
         UpdateEventRequest updateEventRequest = new UpdateEventRequest("update event", updateLocation, "A update test event", updateDate, true, true, 30,null,null);
-        UpdateEventRequestDTO updateEventRequestDTO = new UpdateEventRequestDTO(idToken, eventId, updateEventRequest, null);
+        UpdateEventRequestDTO updateEventRequestDTO = new UpdateEventRequestDTO(uid, eventId, updateEventRequest, null);
         DecodedTokenInfo decodedTokenInfo = mock(DecodedTokenInfo.class);
 
 
         when(decodedTokenInfo.getUid()).thenReturn(uid);
-        when(authService.verifyToken(idToken)).thenReturn(decodedTokenInfo);
         when(eventRepository.findById("event123")).thenReturn(Optional.ofNullable(event));
         doAnswer(invocation -> {
             event.setName(updateEventRequest.getName());
@@ -162,7 +161,6 @@ public class EventUseCaseTest {
         assertEquals("update event", updatedEvent.getName());
         assertEquals("A update test event", updatedEvent.getDescription());
 
-        verify(authService).verifyToken(idToken);
         verify(eventRepository).findById(eventId);
         verify(eventRepository).save(event);
         verify(imageStorageService, never()).uploadImage((MultipartFile) any());

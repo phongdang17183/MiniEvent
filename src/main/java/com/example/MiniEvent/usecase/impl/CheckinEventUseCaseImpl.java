@@ -3,9 +3,13 @@ package com.example.MiniEvent.usecase.impl;
 import com.example.MiniEvent.adapter.repository.CheckinRepository;
 import com.example.MiniEvent.adapter.repository.EventRepository;
 import com.example.MiniEvent.adapter.web.dto.request.CheckinRequest;
+import com.example.MiniEvent.adapter.web.exception.BadRequestException;
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
 import com.example.MiniEvent.model.entity.Checkin;
+import com.example.MiniEvent.model.entity.CheckinMethod;
 import com.example.MiniEvent.model.entity.Event;
+import com.example.MiniEvent.model.entity.QRCodeData;
+import com.example.MiniEvent.service.inteface.QRCodeGenService;
 import com.example.MiniEvent.usecase.inteface.CheckinEventUseCase;
 import com.google.cloud.firestore.GeoPoint;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +28,19 @@ public class CheckinEventUseCaseImpl implements CheckinEventUseCase {
 
     private final EventRepository eventRepository;
     private final CheckinRepository checkinRepository;
+    private final QRCodeGenService qrCodeGenService;
 
     @Value("${app.distance.threshold}")
     private double DISTANCE_THRESHOLD;
 
     @Override
-    public Boolean CheckinEventGPS(CheckinRequest checkinRequest, String eventId, String userId) {
+    public Checkin CheckinEventGPS(CheckinRequest checkinRequest, String eventId, String userId) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new DataNotFoundException("Event not found", HttpStatus.NOT_FOUND));
+
+        if (!event.getGps()) {
+            throw new BadRequestException("This event does not support GPS check-in", HttpStatus.BAD_REQUEST);
+        }
 
         double distance = calculateDistance(
                 event.getLocation().getLatitude(), event.getLocation().getLongitude(),
@@ -43,11 +52,31 @@ public class CheckinEventUseCaseImpl implements CheckinEventUseCase {
                 .userId(userId)
                 .eventId(eventId)
                 .date(new Date())
+                .checkinMethod(CheckinMethod.GPS)
                 .location(new GeoPoint(checkinRequest.getUserLatitude(), checkinRequest.getUserLongitude()))
                 .build();
 
+        return checkinRepository.save(checkin);
+    }
+
+    @Override
+    public Checkin CheckinEventQR(String token, String eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new DataNotFoundException("Event not found", HttpStatus.NOT_FOUND));
+
+        QRCodeData qrCodeData = qrCodeGenService.getData(token);
+
+        Checkin checkin = Checkin.builder()
+                .id(UUID.randomUUID().toString())
+                .userId(qrCodeData.getUserId())
+                .eventId(qrCodeData.getEventId())
+                .date(new Date())
+                .checkinMethod(CheckinMethod.QR)
+                .location(event.getLocation())
+                .build();
+
         checkinRepository.save(checkin);
-        return distance <= DISTANCE_THRESHOLD;
+        return checkin;
     }
 
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
