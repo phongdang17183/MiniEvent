@@ -31,6 +31,9 @@ public class CreateEventUseCaseImpl implements CreateEventUseCase {
         if(eventDTO.getEventTag() == null ){
             throw new IllegalArgumentException("Event tag is required");
         }
+        if(eventDTO.getAddress() == null || eventDTO.getAddress().isEmpty()){
+            throw new IllegalArgumentException("Event address is required");
+        }
 
         String uid = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -50,6 +53,7 @@ public class CreateEventUseCaseImpl implements CreateEventUseCase {
                 .gps(eventDTO.getGps())
                 .image(imageUrl)
                 .eventTag(eventDTO.getEventTag())
+                .address(eventDTO.getAddress())
                 .createdBy(uid)
                 .build();
 

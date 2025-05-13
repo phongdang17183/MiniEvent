@@ -63,7 +63,7 @@ public class EventUseCaseTest {
     void setUp() {
         GeoPoint location = new GeoPoint(10.7769,106.7009);
         Timestamp date = Timestamp.ofTimeMicroseconds(1634567890000000L);
-        createEventRequest = new CreateEventRequest("test event", location, "A test event", date, false, false, 50, EventTag.SPORTS);
+        createEventRequest = new CreateEventRequest("test event", location, "A test event", date, false, false, 50, EventTag.SPORTS, "111abc");
 
         event = Event.builder()
                 .id("event123")
@@ -139,13 +139,12 @@ public class EventUseCaseTest {
         String eventId = "event123";
         GeoPoint updateLocation = new GeoPoint(11.7769,13.7009);
         Timestamp updateDate = Timestamp.ofTimeMicroseconds(1745147570000000L);
-        UpdateEventRequest updateEventRequest = new UpdateEventRequest("update event", updateLocation, "A update test event", updateDate, true, true, 30);
-        UpdateEventRequestDTO updateEventRequestDTO = new UpdateEventRequestDTO(idToken, eventId, updateEventRequest, null);
+        UpdateEventRequest updateEventRequest = new UpdateEventRequest("update event", updateLocation, "A update test event", updateDate, true, true, 30,null,null);
+        UpdateEventRequestDTO updateEventRequestDTO = new UpdateEventRequestDTO(uid, eventId, updateEventRequest, null);
         DecodedTokenInfo decodedTokenInfo = mock(DecodedTokenInfo.class);
 
 
         when(decodedTokenInfo.getUid()).thenReturn(uid);
-        when(authService.verifyToken(idToken)).thenReturn(decodedTokenInfo);
         when(eventRepository.findById("event123")).thenReturn(Optional.ofNullable(event));
         doAnswer(invocation -> {
             event.setName(updateEventRequest.getName());
@@ -162,7 +161,6 @@ public class EventUseCaseTest {
         assertEquals("update event", updatedEvent.getName());
         assertEquals("A update test event", updatedEvent.getDescription());
 
-        verify(authService).verifyToken(idToken);
         verify(eventRepository).findById(eventId);
         verify(eventRepository).save(event);
         verify(imageStorageService, never()).uploadImage((MultipartFile) any());

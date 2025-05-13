@@ -23,4 +23,5 @@ public class Event {
     private Integer limit;
     private Boolean gps;
     private EventTag eventTag;
+    private String address;
 }

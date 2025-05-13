@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @Builder
 public class UpdateEventRequestDTO {
-    private String idToken;
+    private String userId;
     private String eventId;
     private UpdateEventRequest request;
     private MultipartFile image;

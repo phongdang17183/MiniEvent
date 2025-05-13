@@ -6,5 +6,7 @@ import com.example.MiniEvent.model.entity.QRCodeData;
 import java.awt.image.BufferedImage;
 
 public interface QRCodeGenService {
-    public BufferedImage generateQRCodeImage(QRCodeData qrCodeData);
+    BufferedImage generateQRCodeImage(QRCodeData qrCodeData);
+    QRCodeData getData(String token);
+
 }
