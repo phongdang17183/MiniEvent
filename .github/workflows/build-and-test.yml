@@ -20,6 +20,7 @@ jobs:
       FIREBASE_APIKEY: ${{ secrets.FIREBASE_APIKEY }}
       EMAIL_USERNAME: $ {{ secrets.EMAIL_USERNAME }}
       QR_SECRET_KEY: ${{ secrets.QR_SECRET_KEY }}
+      SPRINGDOC_SERVER_URL: ${{ secrets.SPRINGDOC_SERVER_URL }}
 
     steps:
       - name: Checkout code
