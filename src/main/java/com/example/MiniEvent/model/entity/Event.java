@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +18,7 @@ public class Event {
     private String name;
     private GeoPoint location;
     private String description;
-    private Timestamp date;
+    private Instant date;
     private String image;
     private String createdBy;
     private Boolean privateEvent;

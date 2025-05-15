@@ -9,7 +9,6 @@ import com.example.MiniEvent.service.inteface.ImageStorageService;
 import com.example.MiniEvent.usecase.inteface.RegisterUserUseCase;
 import com.example.MiniEvent.adapter.web.dto.request.RegisterRequest;
 import com.example.MiniEvent.adapter.web.exception.BadRequestException;
-import com.google.cloud.Timestamp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -57,7 +57,7 @@ public class RegisterUserUseCaseImpl implements RegisterUserUseCase {
                 .username(request.getUsername())
                 .image(imageUrl)
                 .phone(request.getPhone())
-                .createDay(Timestamp.now())
+                .createDay(Instant.now())
                 .eventCreate(0)
                 .eventJoin(0)
                 .build();
