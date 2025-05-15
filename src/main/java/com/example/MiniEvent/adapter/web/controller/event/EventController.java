@@ -7,6 +7,7 @@ import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.entity.EventTag;
+import com.example.MiniEvent.usecase.impl.GetGuestListUseCaseImpl;
 import com.example.MiniEvent.usecase.inteface.*;
 import com.example.MiniEvent.adapter.web.dto.request.CreateEventRequest;
 import com.example.MiniEvent.adapter.web.response.ResponseObject;
@@ -36,6 +37,7 @@ public class EventController {
     private final RegisterEventUseCase registerEventUseCase;
     private final GetUserInfoUseCase getUserInfoUseCase;
     private final CheckinEventUseCase checkinEventUseCase;
+    private final GetGuestListUseCase getGuestListUseCase;
 
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -176,4 +178,20 @@ public class EventController {
         );
     }
 
+    @GetMapping("/{eventID}/userList")
+    public ResponseEntity<?> getGuestList(
+            @PathVariable String eventID,
+            @RequestHeader("Authorization") String authHeader){
+        String idToken = authHeader.replace("Bearer ", "");
+        AppUser user = getUserInfoUseCase.getInfo(idToken).orElseThrow(
+                () -> new DataNotFoundException("User not found", HttpStatus.NOT_FOUND)
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseObject.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Get guest list successfully")
+                        .data(getGuestListUseCase.GetGuestListWithState(eventID, user))
+                        .build()
+        );
+    }
 }
