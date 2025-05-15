@@ -25,6 +25,11 @@ public class FireBaseEventRepository implements EventRepository{
     public Event save(Event event) {
         try {
             firestore.collection("events").document(event.getId()).set(event).get();
+            ApiFuture<WriteResult> query = firestore.collection("users")
+                    .document(event.getCreatedBy())
+                    .update("eventCreate", FieldValue.increment(1));
+            query.get();
+
             return event;
         } catch (Exception e) {
             throw new RuntimeException("Failed to save event: " + e.getMessage(), e);
