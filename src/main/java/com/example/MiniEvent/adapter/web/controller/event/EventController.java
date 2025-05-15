@@ -7,7 +7,6 @@ import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.entity.EventTag;
-import com.example.MiniEvent.model.entity.QRCodeData;
 import com.example.MiniEvent.usecase.inteface.*;
 import com.example.MiniEvent.adapter.web.dto.request.CreateEventRequest;
 import com.example.MiniEvent.adapter.web.response.ResponseObject;

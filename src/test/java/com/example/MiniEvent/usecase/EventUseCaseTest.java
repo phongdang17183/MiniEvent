@@ -28,6 +28,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,13 +63,13 @@ public class EventUseCaseTest {
     @BeforeEach
     void setUp() {
         GeoPoint location = new GeoPoint(10.7769,106.7009);
-        Timestamp date = Timestamp.ofTimeMicroseconds(1634567890000000L);
+        Instant date = Instant.ofEpochSecond(1634567890L, 0);
         createEventRequest = new CreateEventRequest("test event", location, "A test event", date, false, false, 50, EventTag.SPORTS, "111abc");
 
         event = Event.builder()
                 .id("event123")
                 .name("Test Event")
-                .date(Timestamp.ofTimeMicroseconds(1634567890000000L))
+                .date(date)
                 .description("A test event")
                 .location(new GeoPoint(10.7769, 106.7009))
                 .privateEvent(false)
@@ -100,7 +101,7 @@ public class EventUseCaseTest {
 
         assertNotNull(result);
         assertEquals("Test Event", result.getName());
-        assertEquals(Timestamp.ofTimeMicroseconds(1634567890000000L), result.getDate());
+        assertEquals(Instant.ofEpochSecond(1634567890L, 0), result.getDate());
         assertEquals("A test event", result.getDescription());
         assertFalse(result.getPrivateEvent());
         assertFalse(result.getGps());
@@ -138,7 +139,7 @@ public class EventUseCaseTest {
         String uid = "uid123";
         String eventId = "event123";
         GeoPoint updateLocation = new GeoPoint(11.7769,13.7009);
-        Timestamp updateDate = Timestamp.ofTimeMicroseconds(1745147570000000L);
+        Instant updateDate = Instant.ofEpochSecond(1634567980L, 0);
         UpdateEventRequest updateEventRequest = new UpdateEventRequest("update event", updateLocation, "A update test event", updateDate, true, true, 30,null,null);
         UpdateEventRequestDTO updateEventRequestDTO = new UpdateEventRequestDTO(uid, eventId, updateEventRequest, null);
         DecodedTokenInfo decodedTokenInfo = mock(DecodedTokenInfo.class);

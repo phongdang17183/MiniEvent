@@ -7,7 +7,6 @@ import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.entity.DecodedTokenInfo;
 import com.example.MiniEvent.service.inteface.AuthService;
 import com.example.MiniEvent.usecase.impl.GetUserInfoUseCaseImpl;
-import com.google.cloud.Timestamp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.http.HttpStatus;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,7 +44,7 @@ public class GetUserInfoUseCaseTest {
                 "abc",
                 "username",
                 "abc@gmail.com",
-                Timestamp.now(),
+                Instant.now(),
                 0,
                 0,
                 "0901234567",

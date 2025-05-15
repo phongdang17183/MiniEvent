@@ -9,7 +9,6 @@ import com.example.MiniEvent.service.inteface.ImageStorageService;
 import com.example.MiniEvent.usecase.inteface.RegisterUserUseCase;
 import com.example.MiniEvent.adapter.web.dto.request.RegisterRequest;
 import com.example.MiniEvent.adapter.web.exception.BadRequestException;
-import com.google.cloud.Timestamp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,20 +16,32 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class RegisterUserUseCaseImpl implements RegisterUserUseCase {
+    public RegisterUserUseCaseImpl(
+            UserRepository userRepository,
+            ImageStorageService imageStorageService,
+            AuthService authService,
+            @Qualifier("appPasswordMailService") EmailService emailService,
+            @Qualifier("dicebearApiUrl") WebClient dicebearWebClient,
+            @Value("${spring.mail.username}") String emailUsername) {
+        this.userRepository = userRepository;
+        this.imageStorageService = imageStorageService;
+        this.authService = authService;
+        this.emailService = emailService;
+        this.dicebearWebClient = dicebearWebClient;
+        this.emailUsername = emailUsername;
+    }
 
     private final UserRepository userRepository;
     private final ImageStorageService imageStorageService;
     private final AuthService authService;
     private final EmailService emailService;
-    @Qualifier("dicebearApiUrl")
     private final WebClient dicebearWebClient;
-    @Value("${spring.mail.username}")
-    private String emailUsername;
+    private final String emailUsername;
 
     @Override
     public AppUser register(RegisterRequest request) {
@@ -40,16 +51,8 @@ public class RegisterUserUseCaseImpl implements RegisterUserUseCase {
         }
 
         String randomSeed = request.getUsername() + "-" + UUID.randomUUID();
-        byte[] avatarByte = dicebearWebClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .queryParam("seed", randomSeed)
-                        .build())
-                .retrieve()
-                .bodyToMono(byte[].class)
-                .block();
 
-
-        String imageUrl = imageStorageService.uploadImage(avatarByte);
+        String imageUrl = imageStorageService.uploadImage(fetchAvatar(randomSeed));
 
         AppUser user = AppUser.builder()
                 .id(authService.createUser(request.getEmail(), request.getPassword()).getUid())
@@ -57,7 +60,7 @@ public class RegisterUserUseCaseImpl implements RegisterUserUseCase {
                 .username(request.getUsername())
                 .image(imageUrl)
                 .phone(request.getPhone())
-                .createDay(Timestamp.now())
+                .createDay(Instant.now())
                 .eventCreate(0)
                 .eventJoin(0)
                 .build();
@@ -67,4 +70,15 @@ public class RegisterUserUseCaseImpl implements RegisterUserUseCase {
         emailService.sendEmail(emailDetail);
         return userRepository.save(user);
     }
+
+    byte[] fetchAvatar(String randomSeed) {
+        return dicebearWebClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .queryParam("seed", randomSeed)
+                        .build())
+                .retrieve()
+                .bodyToMono(byte[].class)
+                .block();
+    }
+
 }

@@ -3,7 +3,6 @@ package com.example.MiniEvent.usecase.impl;
 import com.example.MiniEvent.adapter.repository.EventRepository;
 import com.example.MiniEvent.adapter.repository.RegistrationRepository;
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
-import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.entity.QRCodeData;
 import com.example.MiniEvent.model.entity.Registration;
 import com.example.MiniEvent.service.inteface.QRCodeGenService;
@@ -13,8 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
-import java.util.Date;
-import java.util.Optional;
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -34,7 +32,7 @@ public class RegisterEventUseCaseImpl implements RegisterEventUseCase {
                 .id(UUID.randomUUID().toString())
                 .eventId(eventId)
                 .userId(userId)
-                .registerAt(new Date())
+                .registerAt(Instant.now())
                 .build();
         registrationRepository.save(registration);
         return qrCodeGenService.generateQRCodeImage(new QRCodeData(userId, eventId));
