@@ -101,4 +101,10 @@ public class FireBaseEventRepository implements EventRepository{
             throw new RuntimeException("Firestore query for findNextPublicEvents failed: " + e.getCause());
         }
     }
+
+    @Override
+    public boolean isNotCreatedByUserId(String eventId, String userId) {
+        Optional<Event> eventOpt = findById(eventId);
+        return eventOpt.isEmpty() || !userId.equals(eventOpt.get().getCreatedBy());
+    }
 }

@@ -8,5 +8,6 @@ import java.util.Optional;
 public interface RegistrationRepository {
     Registration save(Registration registration);
     Optional<Registration> findByUserIdAndEventId(String userId, String eventId);
+    Registration delete(Registration registration);
     List<Registration> findByEventId(String eventId);
 }
