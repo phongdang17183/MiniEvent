@@ -4,13 +4,15 @@ import com.example.MiniEvent.adapter.repository.CheckinRepository;
 import com.example.MiniEvent.adapter.repository.EventRepository;
 import com.example.MiniEvent.adapter.repository.RegistrationRepository;
 import com.example.MiniEvent.adapter.repository.UserRepository;
+import com.example.MiniEvent.adapter.web.dto.mapper.AppUserMapper;
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
+import com.example.MiniEvent.adapter.web.exception.NotAllowAccessException;
 import com.example.MiniEvent.adapter.web.response.GuestListResponse;
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.entity.Registration;
+import com.example.MiniEvent.model.entity.StateType;
 import com.example.MiniEvent.usecase.inteface.GetGuestListUseCase;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +25,14 @@ public class GetGuestListUseCaseImpl implements GetGuestListUseCase {
     private final RegistrationRepository registrationRepository;
     private final CheckinRepository checkinRepository;
     private final UserRepository userRepository;
+    private final AppUserMapper appUserMapper;
 
-    public GetGuestListUseCaseImpl(EventRepository eventRepository, RegistrationRepository registrationRepository, CheckinRepository checkinRepository, UserRepository userRepository) {
+    public GetGuestListUseCaseImpl(EventRepository eventRepository, RegistrationRepository registrationRepository, CheckinRepository checkinRepository, UserRepository userRepository, AppUserMapper appUserMapper) {
         this.eventRepository = eventRepository;
         this.registrationRepository = registrationRepository;
         this.checkinRepository = checkinRepository;
         this.userRepository = userRepository;
+        this.appUserMapper = appUserMapper;
     }
 
     @Override
@@ -37,7 +41,7 @@ public class GetGuestListUseCaseImpl implements GetGuestListUseCase {
                 .orElseThrow(() -> new DataNotFoundException("Event not found", HttpStatus.NOT_FOUND));
 
         if (!event.getCreatedBy().equals(user.getId())) {
-            throw new DataAccessException("You are not the owner of event: " + eventId) {};
+            throw new NotAllowAccessException("You are not the owner of event", HttpStatus.FORBIDDEN);
         }
 
         List<Registration> registrations = registrationRepository.findByEventId(eventId);
@@ -47,10 +51,9 @@ public class GetGuestListUseCaseImpl implements GetGuestListUseCase {
                     String guestUserId = registration.getUserId();
                     boolean hasCheckedIn = checkinRepository.existsByEventIdAndUserId(eventId, guestUserId);
                     AppUser guestUser = userRepository.findByUid(guestUserId).orElseThrow(() -> new DataNotFoundException("User of registration not found", HttpStatus.NOT_FOUND));
-                    String state = hasCheckedIn ? "confirm" : "pending";
                     return GuestListResponse.builder()
-                            .appUser(guestUser)
-                            .state(state)
+                            .appUserDTO(appUserMapper.fromAppUser(guestUser))
+                            .stateType(hasCheckedIn ? StateType.confirm : StateType.pending)
                             .build();
                 })
                 .collect(Collectors.toList());

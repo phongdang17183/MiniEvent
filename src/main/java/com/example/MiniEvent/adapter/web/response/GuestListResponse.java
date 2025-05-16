@@ -1,15 +1,16 @@
 package com.example.MiniEvent.adapter.web.response;
 
-import com.example.MiniEvent.model.entity.AppUser;
+import com.example.MiniEvent.adapter.web.dto.AppUserDTO;
+import com.example.MiniEvent.model.entity.StateType;
 import lombok.Builder;
 
 @Builder
 public class GuestListResponse {
-    public AppUser appUser;
-    public String state;
+    public AppUserDTO appUserDTO;
+    public StateType stateType;
 
-    public GuestListResponse(AppUser appUser, String state) {
-        this.appUser = appUser;
-        this.state = state;
+    public GuestListResponse(AppUserDTO appUserDTO, StateType stateType) {
+        this.appUserDTO = appUserDTO;
+        this.stateType = stateType;
     }
 }
