@@ -65,7 +65,7 @@ public class FireBaseUserRepository implements UserRepository{
     }
 
     @Override
-    public List<AppUser> findByPhone(String phone, Instant cursor) {
+    public List<AppUser> findAllByPhoneAfter(String phone, Instant cursor) {
         try {
             Timestamp firestoreTimestamp = Timestamp.ofTimeSecondsAndNanos(
                     cursor.getEpochSecond(),
@@ -92,5 +92,22 @@ public class FireBaseUserRepository implements UserRepository{
         }
     }
 
+        @Override
+        public Optional<AppUser> findByPhone(String phone) {
+            try {
+                Query query = firestore.collection("users")
+                        .whereEqualTo("phone", phone)
+                        .limit(1);
 
+                ApiFuture<QuerySnapshot> future = query.get();
+                List<AppUser> users = future.get().toObjects(AppUser.class);
+
+                if (users.isEmpty()) {
+                    return Optional.empty();
+                }
+                return Optional.of(users.getFirst());
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to fetch user by phone number: " + e.getMessage(), e);
+            }
+        }
 }

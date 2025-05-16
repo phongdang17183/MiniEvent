@@ -6,5 +6,5 @@ import java.time.Instant;
 import java.util.List;
 
 public interface GetUserByPhoneUseCase {
-    List<AppUser> findByPhone(String phone, Instant cursor);
+    List<AppUser> findAllByPhoneAfter(String phone, Instant cursor);
 }

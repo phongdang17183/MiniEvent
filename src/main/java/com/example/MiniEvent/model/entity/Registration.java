@@ -17,4 +17,5 @@ public class    Registration {
     private String userId;
     private String eventId;
     private Instant registerAt;
+    private RegistrationType type;
 }

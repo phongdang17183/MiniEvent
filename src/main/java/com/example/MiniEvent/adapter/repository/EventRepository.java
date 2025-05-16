@@ -12,4 +12,5 @@ public interface EventRepository {
     Optional<Event> findById(String id);
     List<Event> findNextPublicEvents(Instant cursorDate, int pageSize);
     List<Event> findNextPublicEventsFilter(Instant cursorDate, int pageSize, EventTag eventTag);
+    boolean isNotCreatedByUserId(String eventId, String userId);
 }
