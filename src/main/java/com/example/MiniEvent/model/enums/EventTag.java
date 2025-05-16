@@ -1,4 +1,4 @@
-package com.example.MiniEvent.model.entity;
+package com.example.MiniEvent.model.enums;
 
 public enum EventTag {
     SPORTS("Thể thao"),

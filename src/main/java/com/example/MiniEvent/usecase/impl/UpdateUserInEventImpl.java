@@ -7,7 +7,7 @@ import com.example.MiniEvent.adapter.web.exception.BadRequestException;
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.entity.Registration;
-import com.example.MiniEvent.model.entity.RegistrationType;
+import com.example.MiniEvent.model.enums.RegistrationType;
 import com.example.MiniEvent.usecase.inteface.UpdateUserInEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -6,7 +6,7 @@ import com.example.MiniEvent.adapter.web.dto.request.CheckinRequest;
 import com.example.MiniEvent.adapter.web.exception.BadRequestException;
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
 import com.example.MiniEvent.model.entity.Checkin;
-import com.example.MiniEvent.model.entity.CheckinMethod;
+import com.example.MiniEvent.model.enums.CheckinMethod;
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.entity.QRCodeData;
 import com.example.MiniEvent.service.inteface.QRCodeGenService;

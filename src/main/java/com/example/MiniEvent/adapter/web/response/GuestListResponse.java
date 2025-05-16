@@ -1,7 +1,7 @@
 package com.example.MiniEvent.adapter.web.response;
 
 import com.example.MiniEvent.adapter.web.dto.AppUserDTO;
-import com.example.MiniEvent.model.entity.StateType;
+import com.example.MiniEvent.model.enums.StateType;
 import lombok.Builder;
 
 @Builder

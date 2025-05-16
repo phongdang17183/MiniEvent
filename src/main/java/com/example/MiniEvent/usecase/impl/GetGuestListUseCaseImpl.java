@@ -11,7 +11,7 @@ import com.example.MiniEvent.adapter.web.response.GuestListResponse;
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.entity.Registration;
-import com.example.MiniEvent.model.entity.StateType;
+import com.example.MiniEvent.model.enums.StateType;
 import com.example.MiniEvent.usecase.inteface.GetGuestListUseCase;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

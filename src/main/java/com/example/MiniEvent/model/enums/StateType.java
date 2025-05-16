@@ -1,4 +1,4 @@
-package com.example.MiniEvent.model.entity;
+package com.example.MiniEvent.model.enums;
 
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package com.example.MiniEvent.model.entity;
 
-import com.google.cloud.Timestamp;
+import com.example.MiniEvent.model.enums.EventTag;
 import com.google.cloud.firestore.GeoPoint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

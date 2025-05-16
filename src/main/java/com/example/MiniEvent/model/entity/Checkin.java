@@ -1,5 +1,6 @@
 package com.example.MiniEvent.model.entity;
 
+import com.example.MiniEvent.model.enums.CheckinMethod;
 import com.google.cloud.firestore.GeoPoint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

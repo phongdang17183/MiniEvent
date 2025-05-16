@@ -2,7 +2,7 @@ package com.example.MiniEvent.adapter.web.dto.request;
 
 import com.example.MiniEvent.config.geopoint.GeoPointDeserializer;
 import com.example.MiniEvent.config.geopoint.GeoPointSerializer;
-import com.example.MiniEvent.model.entity.EventTag;
+import com.example.MiniEvent.model.enums.EventTag;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.cloud.firestore.GeoPoint;

@@ -2,7 +2,7 @@ package com.example.MiniEvent.adapter.repository;
 
 
 import com.example.MiniEvent.model.entity.Event;
-import com.example.MiniEvent.model.entity.EventTag;
+import com.example.MiniEvent.model.enums.EventTag;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.*;

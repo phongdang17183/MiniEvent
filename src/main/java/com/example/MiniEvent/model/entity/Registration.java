@@ -1,12 +1,12 @@
 package com.example.MiniEvent.model.entity;
 
+import com.example.MiniEvent.model.enums.RegistrationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor

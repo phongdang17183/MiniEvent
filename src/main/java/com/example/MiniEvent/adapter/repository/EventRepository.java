@@ -1,7 +1,7 @@
 package com.example.MiniEvent.adapter.repository;
 
 import com.example.MiniEvent.model.entity.Event;
-import com.example.MiniEvent.model.entity.EventTag;
+import com.example.MiniEvent.model.enums.EventTag;
 
 import java.time.Instant;
 import java.util.List;
