@@ -12,4 +12,5 @@ public interface UserRepository {
     Optional<AppUser> findByUid(String uid);
     List<AppUser> findAllByPhoneAfter(String phone, Instant cursor);
     Optional<AppUser> findByPhone(String phone);
+    void deleteByUserId(String userId);
 }

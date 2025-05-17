@@ -76,4 +76,14 @@ public class FireBaseAuthService implements AuthService {
                 .bodyToMono(Map.class)
                 .block();
     }
+
+    @Override
+    public void deleteAccount(String userId)  {
+        try {
+            FirebaseAuth.getInstance().deleteUser(userId);
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Error in delete user in firebase");
+        }
+    }
 }

@@ -25,6 +25,7 @@ public class UserController {
     private final LoginUserUseCase loginUserUseCase;
     private final GetUserByPhoneUseCase getUserByPhoneUseCase;
     private final UpdateUserInEvent updateUserInEvent;
+    private final DeleteAccountUseCase deleteAccountUseCase;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
@@ -129,6 +130,24 @@ public class UserController {
                         .status(HttpStatus.OK.value())
                         .message("Add user to event successfully")
                         .data(updateUserInEvent.removeUserInEvent(user.getId(), eventId, phoneNumber))
+                        .build()
+        );
+    }
+
+    @DeleteMapping("/info")
+    public ResponseEntity<?> removeUserInEvent(
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        String idToken = authHeader.replace("Bearer ", "");
+        AppUser user = getUserInfoUseCase.getInfo(idToken).orElseThrow(
+                () -> new DataNotFoundException("User not found", HttpStatus.NOT_FOUND)
+        );
+        deleteAccountUseCase.deleteAccount(user.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseObject.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Delete user with all related record successfully")
+                        .data(null)
                         .build()
         );
     }

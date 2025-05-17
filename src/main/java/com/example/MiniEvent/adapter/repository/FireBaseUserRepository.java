@@ -92,22 +92,37 @@ public class FireBaseUserRepository implements UserRepository{
         }
     }
 
-        @Override
-        public Optional<AppUser> findByPhone(String phone) {
-            try {
-                Query query = firestore.collection("users")
-                        .whereEqualTo("phone", phone)
-                        .limit(1);
+    @Override
+    public Optional<AppUser> findByPhone(String phone) {
+        try {
+            Query query = firestore.collection("users")
+                    .whereEqualTo("phone", phone)
+                    .limit(1);
 
-                ApiFuture<QuerySnapshot> future = query.get();
-                List<AppUser> users = future.get().toObjects(AppUser.class);
+            ApiFuture<QuerySnapshot> future = query.get();
+            List<AppUser> users = future.get().toObjects(AppUser.class);
 
-                if (users.isEmpty()) {
-                    return Optional.empty();
-                }
-                return Optional.of(users.getFirst());
-            } catch (Exception e) {
-                throw new RuntimeException("Failed to fetch user by phone number: " + e.getMessage(), e);
+            if (users.isEmpty()) {
+                return Optional.empty();
             }
+            return Optional.of(users.getFirst());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch user by phone number: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public void deleteByUserId(String userId) {
+        try {
+            ApiFuture<WriteResult> query = firestore.collection("users")
+                    .document(userId)
+                    .delete();
+
+            query.get();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete registration with userId", e);
+        }
+    }
+
+
 }

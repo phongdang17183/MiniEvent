@@ -1,12 +1,9 @@
 package com.example.MiniEvent.adapter.repository;
 
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
-import com.example.MiniEvent.model.entity.AppUser;
-import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.entity.Registration;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
-import com.google.firebase.auth.FirebaseAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
@@ -89,6 +86,26 @@ public class FireBaseRegistraionRepository implements RegistrationRepository {
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new RuntimeException("Firestore query failed", e);
+        }
+    }
+
+    @Override
+    public void deleteByUserId(String userId) {
+        try {
+            ApiFuture<QuerySnapshot> query = firestore.collection("registrations")
+                    .whereEqualTo("userId", userId)
+                    .get();
+
+            WriteBatch batch = firestore.batch();
+            List<QueryDocumentSnapshot> documents = query.get().getDocuments();
+
+            for (QueryDocumentSnapshot document : documents) {
+                batch.delete(document.getReference());
+            }
+
+            batch.commit().get();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete registration with userId", e);
         }
     }
 

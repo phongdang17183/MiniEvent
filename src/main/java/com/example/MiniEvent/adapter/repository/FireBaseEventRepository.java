@@ -107,4 +107,24 @@ public class FireBaseEventRepository implements EventRepository{
         Optional<Event> eventOpt = findById(eventId);
         return eventOpt.isEmpty() || !userId.equals(eventOpt.get().getCreatedBy());
     }
+
+    @Override
+    public void deleteByUserId(String userId) {
+        try {
+            ApiFuture<QuerySnapshot> query = firestore.collection("events")
+                    .whereEqualTo("createBy", userId)
+                    .get();
+
+            WriteBatch batch = firestore.batch();
+            List<QueryDocumentSnapshot> documents = query.get().getDocuments();
+
+            for (QueryDocumentSnapshot document : documents) {
+                batch.delete(document.getReference());
+            }
+
+            batch.commit().get();
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Failed to delete events create by user with userId: %s", userId), e);
+        }
+    }
 }

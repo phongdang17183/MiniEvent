@@ -2,10 +2,7 @@ package com.example.MiniEvent.adapter.repository;
 
 import com.example.MiniEvent.model.entity.Checkin;
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 import com.google.firebase.auth.FirebaseAuth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -47,6 +44,26 @@ public class FireBaseCheckinRepository implements CheckinRepository{
             return !documents.isEmpty();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException("Failed to query checkins collection", e);
+        }
+    }
+
+    @Override
+    public void deleteByUserId(String userId) {
+        try {
+            ApiFuture<QuerySnapshot> query = firestore.collection("checkins")
+                    .whereEqualTo("userId", userId)
+                    .get();
+
+            WriteBatch batch = firestore.batch();
+            List<QueryDocumentSnapshot> documents = query.get().getDocuments();
+
+            for (QueryDocumentSnapshot document : documents) {
+                batch.delete(document.getReference());
+            }
+
+            batch.commit().get();
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Failed to delete events create by user with userId: %s", userId), e);
         }
     }
 }

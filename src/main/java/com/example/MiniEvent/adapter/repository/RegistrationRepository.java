@@ -10,4 +10,5 @@ public interface RegistrationRepository {
     Optional<Registration> findByUserIdAndEventId(String userId, String eventId);
     Registration delete(Registration registration);
     List<Registration> findByEventId(String eventId);
+    void deleteByUserId(String userId);
 }
