@@ -3,11 +3,13 @@ package com.example.MiniEvent.adapter.repository;
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
 import com.example.MiniEvent.model.entity.Registration;
 import com.google.api.core.ApiFuture;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -106,6 +108,32 @@ public class FireBaseRegistraionRepository implements RegistrationRepository {
             batch.commit().get();
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete registration with userId", e);
+        }
+    }
+
+    @Override
+    public List<Registration> findByUserId(String userId, Instant cursorDate) {
+        try {
+
+            Timestamp firestoreTimestamp = Timestamp.ofTimeSecondsAndNanos(
+                    cursorDate.getEpochSecond(),
+                    cursorDate.getNano()
+            );
+
+            ApiFuture<QuerySnapshot> query = firestore.collection("registrations")
+                    .whereEqualTo("userId", userId)
+                    .orderBy("registerAt")
+                    .limit(10)
+                    .startAfter(firestoreTimestamp)
+                    .get();
+
+            List<QueryDocumentSnapshot> documentSnapshots = query.get().getDocuments();
+            return documentSnapshots.stream()
+                    .map(documentSnapshot -> documentSnapshot.toObject(Registration.class))
+                    .toList();
+
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Failed to find events joined by user with userId: %s", userId), e.getCause());
         }
     }
 
