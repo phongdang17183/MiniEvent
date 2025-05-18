@@ -27,7 +27,7 @@ public class GetEventUserUseCaseImpl implements GetEventUserUseCase {
         List<Event> events = eventRepository.findByCreateBy(userId, cursorDate);
         return events.stream().map(
                 event -> {
-                    EventStatus eventStatus = event.getDate().getNano() < Instant.now().getNano() ? EventStatus.COMPLETE : EventStatus.UPCOMING;
+                    EventStatus eventStatus = event.getDate().isBefore(Instant.now()) ? EventStatus.COMPLETE : EventStatus.UPCOMING;
                     return new EventDTO(event, eventStatus);
                 }
         ).toList();
