@@ -23,7 +23,7 @@ services:
       - app-networks
 
   minievent:
-    image: brookvita3/minievent:0.0.1
+    image: brookvita3/minievent:1.0.4
     container_name: minievent
     expose:
       - "8080"

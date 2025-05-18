@@ -1,10 +1,7 @@
 package com.example.MiniEvent.adapter.web.controller.user;
 
 import com.example.MiniEvent.adapter.web.dto.request.LoginRequest;
-import com.example.MiniEvent.usecase.inteface.GetUserByPhoneUseCase;
-import com.example.MiniEvent.usecase.inteface.GetUserInfoUseCase;
-import com.example.MiniEvent.usecase.inteface.LoginUserUseCase;
-import com.example.MiniEvent.usecase.inteface.RegisterUserUseCase;
+import com.example.MiniEvent.usecase.inteface.*;
 import com.example.MiniEvent.adapter.web.dto.request.RegisterRequest;
 import com.example.MiniEvent.model.entity.AppUser;
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
@@ -27,6 +24,8 @@ public class UserController {
     private final GetUserInfoUseCase getUserInfoUseCase;
     private final LoginUserUseCase loginUserUseCase;
     private final GetUserByPhoneUseCase getUserByPhoneUseCase;
+    private final UpdateUserInEvent updateUserInEvent;
+    private final DeleteAccountUseCase deleteAccountUseCase;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
@@ -75,7 +74,7 @@ public class UserController {
             @Valid @RequestParam String phone,
             @RequestParam(required = false) String lastDate) {
         Instant cursor = Instant.parse(lastDate);
-        List<AppUser> users = getUserByPhoneUseCase.findByPhone(phone, cursor);
+        List<AppUser> users = getUserByPhoneUseCase.findAllByPhoneAfter(phone, cursor);
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseObject.builder()
                         .status(HttpStatus.OK.value())
@@ -92,6 +91,62 @@ public class UserController {
                 ResponseObject.builder()
                         .status(HttpStatus.OK.value())
                         .message("Get info user successfully")
+                        .data(null)
+                        .build()
+        );
+    }
+
+    @PostMapping("/events/{eventId}/add")
+    public ResponseEntity<?> addUserInEvent(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable String eventId,
+            @RequestParam String phoneNumber
+    ) {
+        String idToken = authHeader.replace("Bearer ", "");
+        AppUser user = getUserInfoUseCase.getInfo(idToken).orElseThrow(
+                () -> new DataNotFoundException("User not found", HttpStatus.NOT_FOUND)
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseObject.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Add user to event successfully")
+                        .data(updateUserInEvent.addUserInEvent(user.getId(), eventId, phoneNumber))
+                        .build()
+        );
+    }
+
+    @DeleteMapping("/events/{eventId}/remove")
+    public ResponseEntity<?> removeUserInEvent(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable String eventId,
+            @RequestParam String phoneNumber
+    ) {
+        String idToken = authHeader.replace("Bearer ", "");
+        AppUser user = getUserInfoUseCase.getInfo(idToken).orElseThrow(
+                () -> new DataNotFoundException("User not found", HttpStatus.NOT_FOUND)
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseObject.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Add user to event successfully")
+                        .data(updateUserInEvent.removeUserInEvent(user.getId(), eventId, phoneNumber))
+                        .build()
+        );
+    }
+
+    @DeleteMapping("/info")
+    public ResponseEntity<?> removeUserInEvent(
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        String idToken = authHeader.replace("Bearer ", "");
+        AppUser user = getUserInfoUseCase.getInfo(idToken).orElseThrow(
+                () -> new DataNotFoundException("User not found", HttpStatus.NOT_FOUND)
+        );
+        deleteAccountUseCase.deleteAccount(user.getId());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ResponseObject.builder()
+                        .status(HttpStatus.OK.value())
+                        .message("Delete user with all related record successfully")
                         .data(null)
                         .build()
         );

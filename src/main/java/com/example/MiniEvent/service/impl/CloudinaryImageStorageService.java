@@ -20,8 +20,8 @@ public class CloudinaryImageStorageService implements ImageStorageService {
 
     private final Map<String, Boolean> options = Map.of(
             "use_filename", true,
-            "unique_filename", false,
-            "overwrite", true
+            "unique_filename", true,
+            "overwrite", false
     );
 
     @Override

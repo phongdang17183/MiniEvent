@@ -1,13 +1,13 @@
 package com.example.MiniEvent.model.entity;
 
-import com.google.cloud.Timestamp;
+import com.example.MiniEvent.model.enums.CheckinMethod;
 import com.google.cloud.firestore.GeoPoint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -18,6 +18,6 @@ public class Checkin {
     private String userId;
     private String eventId;
     private GeoPoint location;
-    private Date date;
+    private Instant date;
     private CheckinMethod checkinMethod;
 }

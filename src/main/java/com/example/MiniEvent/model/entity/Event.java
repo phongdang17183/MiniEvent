@@ -1,11 +1,13 @@
 package com.example.MiniEvent.model.entity;
 
-import com.google.cloud.Timestamp;
+import com.example.MiniEvent.model.enums.EventTag;
 import com.google.cloud.firestore.GeoPoint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +18,7 @@ public class Event {
     private String name;
     private GeoPoint location;
     private String description;
-    private Timestamp date;
+    private Instant date;
     private String image;
     private String createdBy;
     private Boolean privateEvent;

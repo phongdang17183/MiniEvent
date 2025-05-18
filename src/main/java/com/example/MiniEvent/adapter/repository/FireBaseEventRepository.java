@@ -2,7 +2,7 @@ package com.example.MiniEvent.adapter.repository;
 
 
 import com.example.MiniEvent.model.entity.Event;
-import com.example.MiniEvent.model.entity.EventTag;
+import com.example.MiniEvent.model.enums.EventTag;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.*;
@@ -25,6 +25,11 @@ public class FireBaseEventRepository implements EventRepository{
     public Event save(Event event) {
         try {
             firestore.collection("events").document(event.getId()).set(event).get();
+            ApiFuture<WriteResult> query = firestore.collection("users")
+                    .document(event.getCreatedBy())
+                    .update("eventCreate", FieldValue.increment(1));
+            query.get();
+
             return event;
         } catch (Exception e) {
             throw new RuntimeException("Failed to save event: " + e.getMessage(), e);
@@ -94,6 +99,32 @@ public class FireBaseEventRepository implements EventRepository{
 
         } catch (Exception e) {
             throw new RuntimeException("Firestore query for findNextPublicEvents failed: " + e.getCause());
+        }
+    }
+
+    @Override
+    public boolean isNotCreatedByUserId(String eventId, String userId) {
+        Optional<Event> eventOpt = findById(eventId);
+        return eventOpt.isEmpty() || !userId.equals(eventOpt.get().getCreatedBy());
+    }
+
+    @Override
+    public void deleteByUserId(String userId) {
+        try {
+            ApiFuture<QuerySnapshot> query = firestore.collection("events")
+                    .whereEqualTo("createBy", userId)
+                    .get();
+
+            WriteBatch batch = firestore.batch();
+            List<QueryDocumentSnapshot> documents = query.get().getDocuments();
+
+            for (QueryDocumentSnapshot document : documents) {
+                batch.delete(document.getReference());
+            }
+
+            batch.commit().get();
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Failed to delete events create by user with userId: %s", userId), e);
         }
     }
 }

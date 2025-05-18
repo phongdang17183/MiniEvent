@@ -7,4 +7,5 @@ public interface AuthService {
     AuthenticatedUser createUser(String email, String password);
     DecodedTokenInfo verifyToken(String idToken);
     Object login(String email, String password);
+    void deleteAccount(String userId);
 }

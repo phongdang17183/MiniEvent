@@ -2,9 +2,8 @@ package com.example.MiniEvent.usecase.impl;
 
 import com.example.MiniEvent.adapter.repository.EventRepository;
 import com.example.MiniEvent.model.entity.Event;
-import com.example.MiniEvent.model.entity.EventTag;
+import com.example.MiniEvent.model.enums.EventTag;
 import com.example.MiniEvent.usecase.inteface.GetPublicEventUseCase;
-import com.google.cloud.Timestamp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

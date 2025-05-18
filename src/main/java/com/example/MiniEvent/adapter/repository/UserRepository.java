@@ -10,5 +10,7 @@ public interface UserRepository {
     AppUser save(AppUser user);
     boolean existsByEmail(String email);
     Optional<AppUser> findByUid(String uid);
-    List<AppUser> findByPhone(String phone, Instant cursor);
+    List<AppUser> findAllByPhoneAfter(String phone, Instant cursor);
+    Optional<AppUser> findByPhone(String phone);
+    void deleteByUserId(String userId);
 }

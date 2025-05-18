@@ -1,7 +1,7 @@
 package com.example.MiniEvent.adapter.repository;
 
 import com.example.MiniEvent.model.entity.Event;
-import com.example.MiniEvent.model.entity.EventTag;
+import com.example.MiniEvent.model.enums.EventTag;
 
 import java.time.Instant;
 import java.util.List;
@@ -12,4 +12,6 @@ public interface EventRepository {
     Optional<Event> findById(String id);
     List<Event> findNextPublicEvents(Instant cursorDate, int pageSize);
     List<Event> findNextPublicEventsFilter(Instant cursorDate, int pageSize, EventTag eventTag);
+    boolean isNotCreatedByUserId(String eventId, String userId);
+    void deleteByUserId(String userId);
 }

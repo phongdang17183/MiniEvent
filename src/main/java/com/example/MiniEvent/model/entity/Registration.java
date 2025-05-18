@@ -1,11 +1,12 @@
 package com.example.MiniEvent.model.entity;
 
+import com.example.MiniEvent.model.enums.RegistrationType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -15,5 +16,6 @@ public class    Registration {
     private String id;
     private String userId;
     private String eventId;
-    private Date registerAt;
+    private Instant registerAt;
+    private RegistrationType type;
 }

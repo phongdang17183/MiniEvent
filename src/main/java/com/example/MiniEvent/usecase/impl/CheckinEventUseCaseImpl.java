@@ -6,7 +6,7 @@ import com.example.MiniEvent.adapter.web.dto.request.CheckinRequest;
 import com.example.MiniEvent.adapter.web.exception.BadRequestException;
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
 import com.example.MiniEvent.model.entity.Checkin;
-import com.example.MiniEvent.model.entity.CheckinMethod;
+import com.example.MiniEvent.model.enums.CheckinMethod;
 import com.example.MiniEvent.model.entity.Event;
 import com.example.MiniEvent.model.entity.QRCodeData;
 import com.example.MiniEvent.service.inteface.QRCodeGenService;
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.UUID;
 
 @Slf4j
@@ -51,7 +51,7 @@ public class CheckinEventUseCaseImpl implements CheckinEventUseCase {
                 .id(UUID.randomUUID().toString())
                 .userId(userId)
                 .eventId(eventId)
-                .date(new Date())
+                .date(Instant.now())
                 .checkinMethod(CheckinMethod.GPS)
                 .location(new GeoPoint(checkinRequest.getUserLatitude(), checkinRequest.getUserLongitude()))
                 .build();
@@ -70,7 +70,7 @@ public class CheckinEventUseCaseImpl implements CheckinEventUseCase {
                 .id(UUID.randomUUID().toString())
                 .userId(qrCodeData.getUserId())
                 .eventId(qrCodeData.getEventId())
-                .date(new Date())
+                .date(Instant.now())
                 .checkinMethod(CheckinMethod.QR)
                 .location(event.getLocation())
                 .build();

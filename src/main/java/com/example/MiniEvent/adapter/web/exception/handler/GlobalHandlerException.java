@@ -1,6 +1,7 @@
 package com.example.MiniEvent.adapter.web.exception.handler;
 
 import com.example.MiniEvent.adapter.web.exception.BaseApiException;
+import com.example.MiniEvent.adapter.web.exception.NotAllowAccessException;
 import com.example.MiniEvent.adapter.web.response.ResponseObject;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -83,6 +84,17 @@ public class GlobalHandlerException {
                         .status(ex.getStatus().value())
                         .message(ex.getMessage())
                         .build());
+    }
+
+    @ExceptionHandler(NotAllowAccessException.class)
+    public ResponseEntity<ResponseObject> handleNotAllowAccessException(NotAllowAccessException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                ResponseObject.builder()
+                        .message("Not allow access data: " + ex.getMessage())
+                        .status(HttpStatus.FORBIDDEN.value())
+                        .data(ex.getMessage())
+                        .build()
+        );
     }
 
 }
