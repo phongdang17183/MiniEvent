@@ -192,7 +192,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 ResponseObject.builder()
                         .status(HttpStatus.OK.value())
-                        .message("Get list events created successfully")
+                        .message("Get list events attended successfully")
                         .data(getEventUserUseCase.getEventsJoin(user.getId(), cursor))
                         .build()
         );

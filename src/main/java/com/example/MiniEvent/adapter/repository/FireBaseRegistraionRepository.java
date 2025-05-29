@@ -125,7 +125,7 @@ public class FireBaseRegistraionRepository implements RegistrationRepository {
                     .whereEqualTo("userId", userId)
                     .orderBy("registerAt")
                     .limit(10)
-                    .startAfter(firestoreTimestamp)
+                    //.startAfter(firestoreTimestamp)
                     .get();
 
             List<QueryDocumentSnapshot> documentSnapshots = query.get().getDocuments();
