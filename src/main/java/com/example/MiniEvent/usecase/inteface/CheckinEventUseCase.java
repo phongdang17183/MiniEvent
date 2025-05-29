@@ -5,5 +5,5 @@ import com.example.MiniEvent.model.entity.Checkin;
 
 public interface CheckinEventUseCase {
     Checkin CheckinEventGPS(CheckinRequest checkinRequest, String eventId, String userId);
-    Checkin CheckinEventQR(String token, String eventId);
+    Checkin CheckinEventQR(String token, String eventId, String userId);
 }

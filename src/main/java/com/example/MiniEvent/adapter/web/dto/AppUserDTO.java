@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class AppUserDTO {
     private String id;
+    private String username;
 }

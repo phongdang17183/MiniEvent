@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -124,10 +125,11 @@ public class FireBaseRegistraionRepository implements RegistrationRepository {
                     .whereEqualTo("userId", userId)
                     .orderBy("registerAt")
                     .limit(10)
-                    .startAfter(firestoreTimestamp)
+                    //.startAfter(firestoreTimestamp)
                     .get();
 
             List<QueryDocumentSnapshot> documentSnapshots = query.get().getDocuments();
+            if (documentSnapshots.isEmpty()) return Collections.emptyList();
             return documentSnapshots.stream()
                     .map(documentSnapshot -> documentSnapshot.toObject(Registration.class))
                     .toList();
