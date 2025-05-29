@@ -172,7 +172,7 @@ public class EventController {
                 ResponseObject.builder()
                         .status(HttpStatus.OK.value())
                         .message("Checkin event by QR successfully")
-                        .data(checkinEventUseCase.CheckinEventQR(token, eventId))
+                        .data(checkinEventUseCase.CheckinEventQR(token, eventId, user.getId()))
                         .build()
         );
     }

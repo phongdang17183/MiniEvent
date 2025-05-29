@@ -1,13 +1,16 @@
 package com.example.MiniEvent.adapter.repository;
 
+import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
 import com.example.MiniEvent.model.entity.Checkin;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.firebase.auth.FirebaseAuth;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @Repository
@@ -64,6 +67,25 @@ public class FireBaseCheckinRepository implements CheckinRepository{
             batch.commit().get();
         } catch (Exception e) {
             throw new RuntimeException(String.format("Failed to delete events create by user with userId: %s", userId), e);
+        }
+    }
+
+    @Override
+    public Optional<Checkin> findByEventIdAndUserId(String eventId, String userId) {
+        try {
+            Query query = firestore.collection("checkins")
+                    .whereEqualTo("userId", userId)
+                    .whereEqualTo("eventId", eventId);
+
+            ApiFuture<QuerySnapshot> future = query.get();
+            List<Checkin> checkins = future.get().toObjects(Checkin.class);
+            if (checkins.isEmpty()) {
+                return Optional.empty();
+            }
+            return Optional.of(checkins.getFirst());
+
+        } catch (Exception e) {
+            throw new DataNotFoundException("Failed to find checkin with userId and eventId: " + e.getMessage(), HttpStatus.NOT_FOUND, e);
         }
     }
 }

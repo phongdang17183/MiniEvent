@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -35,6 +36,12 @@ public class CheckinEventUseCaseImpl implements CheckinEventUseCase {
 
     @Override
     public Checkin CheckinEventGPS(CheckinRequest checkinRequest, String eventId, String userId) {
+
+        Optional<Checkin> existingCheckin = checkinRepository.findByEventIdAndUserId(eventId, userId);
+        if (existingCheckin.isPresent()) {
+            return existingCheckin.get();
+        }
+
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new DataNotFoundException("Event not found", HttpStatus.NOT_FOUND));
 
@@ -46,6 +53,10 @@ public class CheckinEventUseCaseImpl implements CheckinEventUseCase {
                 event.getLocation().getLatitude(), event.getLocation().getLongitude(),
                 checkinRequest.getUserLatitude(), checkinRequest.getUserLongitude()
         );
+
+        if (distance > DISTANCE_THRESHOLD) {
+            throw new BadRequestException("You are too far from the event location", HttpStatus.BAD_REQUEST);
+        }
 
         Checkin checkin = Checkin.builder()
                 .id(UUID.randomUUID().toString())
@@ -60,7 +71,13 @@ public class CheckinEventUseCaseImpl implements CheckinEventUseCase {
     }
 
     @Override
-    public Checkin CheckinEventQR(String token, String eventId) {
+    public Checkin CheckinEventQR(String token, String eventId, String userId) {
+
+        Optional<Checkin> existingCheckin = checkinRepository.findByEventIdAndUserId(eventId, userId);
+        if (existingCheckin.isPresent()) {
+            return existingCheckin.get();
+        }
+
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new DataNotFoundException("Event not found", HttpStatus.NOT_FOUND));
 
