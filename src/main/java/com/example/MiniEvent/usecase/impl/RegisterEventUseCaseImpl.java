@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -26,6 +27,12 @@ public class RegisterEventUseCaseImpl implements RegisterEventUseCase {
 
     @Override
     public BufferedImage registerEvent(String eventId, String userId) {
+
+        Optional<Registration> register = registrationRepository.findByUserIdAndEventId(userId, eventId);
+        if (register.isPresent()) {
+            qrCodeGenService.generateQRCodeImage(new QRCodeData(userId, eventId));
+        }
+
         if (eventRepository.findById(eventId).isEmpty()) {
             throw new DataNotFoundException("Event not found", HttpStatus.NOT_FOUND);
         }
