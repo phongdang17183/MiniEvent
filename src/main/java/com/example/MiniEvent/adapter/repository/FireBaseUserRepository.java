@@ -76,8 +76,8 @@ public class FireBaseUserRepository implements UserRepository{
             Query query = firestore.collection("users")
                     .whereEqualTo("phone", phone)
                     .orderBy("createDay")
-                    .limit(10)
-                    .startAfter(firestoreTimestamp);
+                    .limit(10);
+                    //.startAfter(firestoreTimestamp);
 
             ApiFuture<QuerySnapshot> future = query.get();
 
