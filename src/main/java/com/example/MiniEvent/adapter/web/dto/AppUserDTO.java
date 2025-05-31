@@ -6,4 +6,5 @@ import lombok.Data;
 public class AppUserDTO {
     private String id;
     private String username;
+    private String phone;
 }
