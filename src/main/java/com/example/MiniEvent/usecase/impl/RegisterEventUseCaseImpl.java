@@ -30,7 +30,7 @@ public class RegisterEventUseCaseImpl implements RegisterEventUseCase {
 
         Optional<Registration> register = registrationRepository.findByUserIdAndEventId(userId, eventId);
         if (register.isPresent()) {
-            qrCodeGenService.generateQRCodeImage(new QRCodeData(userId, eventId));
+            return qrCodeGenService.generateQRCodeImage(new QRCodeData(userId, eventId));
         }
 
         if (eventRepository.findById(eventId).isEmpty()) {
