@@ -59,7 +59,7 @@ public class ZXingQRCodeGenService implements QRCodeGenService {
     }
 
     @Override
-    public QRCodeData getData(String token) {
+    public QRCodeData setData(String token) {
         try {
             Claims claims = parseJwt(token);
             String userId = claims.get("userId", String.class);
