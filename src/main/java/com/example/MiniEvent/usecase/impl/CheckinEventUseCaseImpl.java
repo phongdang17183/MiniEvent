@@ -5,6 +5,7 @@ import com.example.MiniEvent.adapter.repository.EventRepository;
 import com.example.MiniEvent.adapter.web.dto.request.CheckinRequest;
 import com.example.MiniEvent.adapter.web.exception.BadRequestException;
 import com.example.MiniEvent.adapter.web.exception.DataNotFoundException;
+import com.example.MiniEvent.adapter.web.exception.NotAllowAccessException;
 import com.example.MiniEvent.model.entity.Checkin;
 import com.example.MiniEvent.model.enums.CheckinMethod;
 import com.example.MiniEvent.model.entity.Event;
@@ -19,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -73,7 +75,9 @@ public class CheckinEventUseCaseImpl implements CheckinEventUseCase {
     @Override
     public Checkin CheckinEventQR(String token, String eventId, String userId) {
 
-        Optional<Checkin> existingCheckin = checkinRepository.findByEventIdAndUserId(eventId, userId);
+        QRCodeData qrCodeData = qrCodeGenService.setData(token);
+
+        Optional<Checkin> existingCheckin = checkinRepository.findByEventIdAndUserId(eventId, qrCodeData.getUserId());
         if (existingCheckin.isPresent()) {
             return existingCheckin.get();
         }
@@ -81,7 +85,9 @@ public class CheckinEventUseCaseImpl implements CheckinEventUseCase {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new DataNotFoundException("Event not found", HttpStatus.NOT_FOUND));
 
-        QRCodeData qrCodeData = qrCodeGenService.getData(token);
+        if (!Objects.equals(event.getCreatedBy(), userId)) {
+            throw new NotAllowAccessException("You are not allow scan qr for this event", HttpStatus.BAD_REQUEST);
+        }
 
         Checkin checkin = Checkin.builder()
                 .id(UUID.randomUUID().toString())
