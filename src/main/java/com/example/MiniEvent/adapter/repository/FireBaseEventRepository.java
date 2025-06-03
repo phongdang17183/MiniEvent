@@ -142,8 +142,8 @@ public class FireBaseEventRepository implements EventRepository{
 
             Query query = firestore.collection("events")
                     .whereEqualTo("createdBy", userId)
-                    .orderBy("date")
-                    .limit(10);
+                    .orderBy("date");
+                    //.limit(10);
 
             ApiFuture<QuerySnapshot> future = query.get();
 
