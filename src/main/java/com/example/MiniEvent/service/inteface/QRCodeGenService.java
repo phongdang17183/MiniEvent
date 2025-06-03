@@ -6,6 +6,6 @@ import java.awt.image.BufferedImage;
 
 public interface QRCodeGenService {
     BufferedImage generateQRCodeImage(QRCodeData qrCodeData);
-    QRCodeData setData(String token);
+    QRCodeData getData(String token);
 
 }

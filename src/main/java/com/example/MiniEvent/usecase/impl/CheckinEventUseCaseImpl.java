@@ -75,7 +75,7 @@ public class CheckinEventUseCaseImpl implements CheckinEventUseCase {
     @Override
     public Checkin CheckinEventQR(String token, String eventId, String userId) {
 
-        QRCodeData qrCodeData = qrCodeGenService.setData(token);
+        QRCodeData qrCodeData = qrCodeGenService.getData(token);
 
         Optional<Checkin> existingCheckin = checkinRepository.findByEventIdAndUserId(eventId, qrCodeData.getUserId());
         if (existingCheckin.isPresent()) {
@@ -84,6 +84,10 @@ public class CheckinEventUseCaseImpl implements CheckinEventUseCase {
 
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new DataNotFoundException("Event not found", HttpStatus.NOT_FOUND));
+
+        if (!Objects.equals(event.getId(),qrCodeData.getEventId())) {
+            throw new NotAllowAccessException("You are not allow scan qr for this event", HttpStatus.BAD_REQUEST);
+        }
 
         if (!Objects.equals(event.getCreatedBy(), userId)) {
             throw new NotAllowAccessException("You are not allow scan qr for this event", HttpStatus.BAD_REQUEST);
